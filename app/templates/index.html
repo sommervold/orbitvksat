@@ -1,0 +1,43 @@
+<html>
+<head>
+
+</head>
+<body>
+    <p>KSAT - Length: {{ data["ksat_length"] }}   Height: {{ data["ksat_height"] }}</p>
+    <p>Orbit - Length: {{ data["orbit_length"] }}   Height: {{ data["orbit_height"] }}</p>
+    <table>
+        <thead>
+            <td>Name</td>
+            <td>Length</td>
+        </thead>
+        <tbody>
+            {% for athlete in data["longest"] %}
+            <tr>
+                <td>{{ athlete["athlete_firstname"] + " " + athlete["athlete_lastname"]}}</td>
+                <td>{{ athlete["distance"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+        
+    </table>
+    <br>
+    <table>
+        <thead>
+            <td>Name</td>
+            <td>Height</td>
+        </thead>
+        <tbody>
+            {% for athlete in data["highest"] %}
+            <tr>
+                <td>{{ athlete["athlete_firstname"] + " " + athlete["athlete_lastname"]}}</td>
+                <td>{{ athlete["elev_gain"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+        
+    </table>
+
+</body>
+</html>
