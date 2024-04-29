@@ -13,20 +13,20 @@ week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
 )
 
-use_cache = False
+use_cache = True
 if not use_cache:
     ksat_w1 = requests.get(
-        "https://strava.com/clubs/1131791/leaderboard?week_offset=1", headers=headers
+        "https://strava.com/clubs/471480/leaderboard?week_offset=1", headers=headers
     ).json()["data"]
     ksat = requests.get(
-        "https://strava.com/clubs/1131791/leaderboard", headers=headers
+        "https://strava.com/clubs/471480/leaderboard", headers=headers
     ).json()["data"]
 
     orbit_w1 = requests.get(
-        "https://strava.com/clubs/471480/leaderboard?week_offset=1", headers=headers
+        "https://strava.com/clubs/1131791/leaderboard?week_offset=1", headers=headers
     ).json()["data"]
     orbit = requests.get(
-        "https://strava.com/clubs/471480/leaderboard", headers=headers
+        "https://strava.com/clubs/1131791/leaderboard", headers=headers
     ).json()["data"]
 
     with open(f"data/{week_num}.json", "w") as f:
