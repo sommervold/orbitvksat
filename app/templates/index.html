@@ -39,9 +39,42 @@
             </tr>
             {% endfor %}
         </tbody>
-
-        
     </table>
 
+    <p>Tshirt-winners:</p>
+    <table>
+        <thead>
+            <td>Name</td>
+            <td>Time earned</td>
+            <td>Organization</td>
+        </thead>
+        <tbody>
+            {% for athlete in data["tshirt"] %}
+            <tr>
+                <td>{{ athlete["athlete"]["athlete_firstname"] + " " + athlete["athlete"]["athlete_lastname"]}}</td>
+                <td>{{ athlete["time"] }}</td>
+                <td>{{ athlete["athlete"]["org"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>Marathon-winners:</p>
+    <table>
+        <thead>
+            <td>Name</td>
+            <td>Time earned</td>
+            <td>Organization</td>
+        </thead>
+        <tbody>
+            {% for athlete in data["marathon"] %}
+            <tr>
+                <td>{{ athlete["athlete"]["athlete_firstname"] + " " + athlete["athlete"]["athlete_lastname"]}}</td>
+                <td>{{ athlete["time"] }}</td>
+                <td>{{ athlete["athlete"]["org"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

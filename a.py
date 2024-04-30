@@ -105,6 +105,30 @@ for athlete in highest:
 with open("data/history.json", "r") as f:
     history = json.load(f)
 
+if "marathon" not in history:
+    history["marathon"] = []
+
+if "tshirt" not in history:
+    history["tshirt"] = []
+
+for member in ksat + orbit:
+    if member["distance"] < 16000:
+        continue # not qualified
+    for member2 in history["tshirt"]:
+        if member2["athlete"]["athlete_id"] == member["athlete_id"]:
+            break
+    else:
+        history["tshirt"].append({"athlete": member, "time": time.isoformat()})
+
+for member in ksat + orbit:
+    if member["distance"] < 100000:
+        continue # not qualified
+    for member2 in history["marathon"]:
+        if member2["athlete"]["athlete_id"] == member["athlete_id"]:
+            break
+    else:
+        history["marathon"].append({"athlete": member, "time": time.isoformat()})
+
 for athlete in ksat + orbit:
     id = str(athlete["athlete_id"])
     
@@ -158,6 +182,8 @@ with open("data/latest.json", "w") as f:
             "highest": highest[:10],
             "total_length": orbit_length + ksat_length,
             "total_height": orbit_height + ksat_height,
+            "tshirt": history["tshirt"],
+            "marathon": history["marathon"],
         },
         f,
         indent=2,
