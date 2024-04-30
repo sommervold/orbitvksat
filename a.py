@@ -60,8 +60,10 @@ for i in range(week_num + 1):
                 member2["elev_gain"] += member["elev_gain"]
                 member2["moving_time"] += member["moving_time"]
                 member2["distance"] += member["distance"]
+                member2["best_activities_distance"] = max(member2["best_activities_distance"], member["best_activities_distance"])
                 break
         else:  # add to list if not present already
+            member["org"] = "orbit"
             orbit.append(member)
 
     for member in data["ksat"]:
@@ -74,8 +76,10 @@ for i in range(week_num + 1):
                 member2["elev_gain"] += member["elev_gain"]
                 member2["moving_time"] += member["moving_time"]
                 member2["distance"] += member["distance"]
+                member2["best_activities_distance"] = max(member2["best_activities_distance"], member["best_activities_distance"])
                 break
         else:  # add to list if not present already
+            member["org"] = "ksat"
             ksat.append(member)
 
 

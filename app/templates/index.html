@@ -9,12 +9,14 @@
         <thead>
             <td>Name</td>
             <td>Length</td>
+            <td>Organization</td>
         </thead>
         <tbody>
             {% for athlete in data["longest"] %}
             <tr>
                 <td>{{ athlete["athlete_firstname"] + " " + athlete["athlete_lastname"]}}</td>
                 <td>{{ athlete["distance"] }}</td>
+                <td>{{ athlete["org"] }}</td>
             </tr>
             {% endfor %}
         </tbody>
