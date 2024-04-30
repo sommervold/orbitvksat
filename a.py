@@ -64,9 +64,6 @@ for i in range(week_num + 1):
             continue
         for member2 in orbit:
             if member2["athlete_id"] == member["athlete_id"]:
-                if member["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
-                    member2["athlete_picture_url"] = member["athlete_picture_url"]
-                    member2["athlete_lastname"] = member["athlete_lastname"]
                 member2["duration"] += member["duration"]
                 member2["num_activities"] += member["num_activities"]
                 member2["elev_gain"] += member["elev_gain"]
@@ -83,9 +80,6 @@ for i in range(week_num + 1):
             continue
         for member2 in ksat:
             if member2["athlete_id"] == member["athlete_id"]:
-                if member["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
-                    member2["athlete_picture_url"] = member["athlete_picture_url"]
-                    member2["athlete_lastname"] = member["athlete_lastname"]
                 member2["duration"] += member["duration"]
                 member2["num_activities"] += member["num_activities"]
                 member2["elev_gain"] += member["elev_gain"]
