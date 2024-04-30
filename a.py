@@ -6,6 +6,9 @@ headers = {
     "Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript",
     "X-Requested-With": "XMLHttpRequest",
 }
+cookies = {
+    "_strava4_session": "",
+}
 # KSAT: 471480
 # ORBIT: 1131791
 time = datetime.datetime.now()
@@ -16,17 +19,17 @@ week_num = int(
 use_cache = False
 if not use_cache:
     ksat_w1 = requests.get(
-        "https://strava.com/clubs/471480/leaderboard?week_offset=1", headers=headers
+        "https://strava.com/clubs/471480/leaderboard?week_offset=1", headers=headers, cookies=cookies
     ).json()["data"]
     ksat = requests.get(
-        "https://strava.com/clubs/471480/leaderboard", headers=headers
+        "https://strava.com/clubs/471480/leaderboard", headers=headers, cookies=cookies
     ).json()["data"]
 
     orbit_w1 = requests.get(
-        "https://strava.com/clubs/1131791/leaderboard?week_offset=1", headers=headers
+        "https://strava.com/clubs/1131791/leaderboard?week_offset=1", headers=headers, cookies=cookies
     ).json()["data"]
     orbit = requests.get(
-        "https://strava.com/clubs/1131791/leaderboard", headers=headers
+        "https://strava.com/clubs/1131791/leaderboard", headers=headers, cookies=cookies
     ).json()["data"]
 
     with open(f"data/{week_num}.json", "w") as f:
@@ -55,6 +58,9 @@ for i in range(week_num + 1):
             continue
         for member2 in orbit:
             if member2["athlete_id"] == member["athlete_id"]:
+                if member["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
+                    member2["athlete_picture_url"] = member["athlete_picture_url"]
+                    member2["athlete_lastname"] = member["athlete_lastname"]
                 member2["duration"] += member["duration"]
                 member2["num_activities"] += member["num_activities"]
                 member2["elev_gain"] += member["elev_gain"]
@@ -71,6 +77,9 @@ for i in range(week_num + 1):
             continue
         for member2 in ksat:
             if member2["athlete_id"] == member["athlete_id"]:
+                if member["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
+                    member2["athlete_picture_url"] = member["athlete_picture_url"]
+                    member2["athlete_lastname"] = member["athlete_lastname"]
                 member2["duration"] += member["duration"]
                 member2["num_activities"] += member["num_activities"]
                 member2["elev_gain"] += member["elev_gain"]
@@ -116,6 +125,9 @@ for member in ksat + orbit:
         continue # not qualified
     for member2 in history["tshirt"]:
         if member2["athlete"]["athlete_id"] == member["athlete_id"]:
+            if member["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
+                member2["athlete"]["athlete_picture_url"] = member["athlete_picture_url"]
+                member2["athlete"]["athlete_lastname"] = member["athlete_lastname"]
             break
     else:
         history["tshirt"].append({"athlete": member, "time": time.isoformat()})
@@ -125,6 +137,9 @@ for member in ksat + orbit:
         continue # not qualified
     for member2 in history["marathon"]:
         if member2["athlete"]["athlete_id"] == member["athlete_id"]:
+            if member["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
+                member2["athlete_picture_url"] = member["athlete_picture_url"]
+                member2["athlete_lastname"] = member["athlete_lastname"]
             break
     else:
         history["marathon"].append({"athlete": member, "time": time.isoformat()})
@@ -139,6 +154,10 @@ for athlete in ksat + orbit:
             "picture": athlete["athlete_picture_url"],
             "history": []
         }
+    else:
+        if athlete["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
+            history["athletes"][id]["picture"] = member["athlete_picture_url"]
+            history["athletes"][id]["lastname"] = member["athlete_lastname"]
     
     athlete2 = history["athletes"][id]
     athlete2["history"].append({
