@@ -8,7 +8,7 @@ headers = {
 }
 try: 
     with open("token.txt") as f:
-        token = f.read()
+        token = f.read().strip()
 except FileNotFoundError:
     token = ""
 
