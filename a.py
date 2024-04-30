@@ -6,8 +6,14 @@ headers = {
     "Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript",
     "X-Requested-With": "XMLHttpRequest",
 }
+try: 
+    with open("token.txt") as f:
+        token = f.read()
+except FileNotFoundError:
+    token = ""
+
 cookies = {
-    "_strava4_session": "",
+    "_strava4_session": token,
 }
 # KSAT: 471480
 # ORBIT: 1131791
