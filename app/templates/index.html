@@ -28,12 +28,14 @@
         <thead>
             <td>Name</td>
             <td>Height</td>
+            <td>Organization</td>
         </thead>
         <tbody>
             {% for athlete in data["highest"] %}
             <tr>
                 <td>{{ athlete["athlete_firstname"] + " " + athlete["athlete_lastname"]}}</td>
                 <td>{{ athlete["elev_gain"] }}</td>
+                <td>{{ athlete["org"] }}</td>
             </tr>
             {% endfor %}
         </tbody>
