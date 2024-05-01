@@ -8,4 +8,4 @@ app = Flask(__name__)
 def index():
     with open("data/latest.json", "r") as f:
         data = json.load(f)
-    return render_template("index.html", data=data)
+    return render_template("better_style.html", data=data)

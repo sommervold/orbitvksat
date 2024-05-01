@@ -78,3 +78,108 @@
     </table>
 </body>
 </html>
+
+
+
+
+
+
+
+
+<div class="section">
+    <h2>Longest Distances by Athlete</h2>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Length</th>
+                <th>Organization</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for athlete in data["longest"] %}
+            <tr>
+                <td><img src="{{ athlete['athlete_picture_url'] }}" class="profile-pic"></td>
+                <td>{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</td>
+                <td>{{ athlete["distance"] }}</td>
+                <td>{{ athlete["org"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Highest Elevations</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Height</th>
+                <th>Organization</th>
+                <th>Profile Picture</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for athlete in data["highest"] %}
+            <tr>
+                <td><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
+                <td>{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</td>
+                <td>{{ athlete["elev_gain"] }}</td>
+                <td>{{ athlete["org"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Tshirt Winners</h2>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Time earned</th>
+                <th>Organization</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for athlete in data["tshirt"] %}
+            <tr>
+                <td><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
+                <td>{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</td>
+                <td>{{ athlete["time"] }}</td>
+                <td>{{ athlete["athlete"]["org"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Marathon Winners</h2>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Time earned</th>
+                <th>Organization</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for athlete in data["marathon"] %}
+            <tr>
+                <td><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
+                <td>{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</td>
+                <td>{{ athlete["time"] }}</td>
+                <td>{{ athlete["athlete"]["org"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Other sections for highest elevations, tshirt winners, marathon winners -->
