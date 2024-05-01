@@ -3,8 +3,9 @@
 
 </head>
 <body>
-    <p>KSAT - Length: {{ data["ksat_length"] }}   Height: {{ data["ksat_height"] }}</p>
-    <p>Orbit - Length: {{ data["orbit_length"] }}   Height: {{ data["orbit_height"] }}</p>
+    <p>KSAT - Length: {{ data["ksat_length"] }}   Height: {{ data["ksat_height"] }}  Distance per employee: {{ data["ksat_distance_per_member"] }}</p>
+    <p>Orbit - Length: {{ data["orbit_length"] }}   Height: {{ data["orbit_height"] }}  Distance per member: {{ data["orbit_distance_per_member"] }}</p>
+    <p>Longest single distance - {{ data["longest_single_distance"]["athlete_firstname"] + " " + data["longest_single_distance"]["athlete_lastname"] + ". Distance: "}}{{ data["longest_single_distance"]["best_activities_distance"] }}</p>
     <table>
         <thead>
             <td>Name</td>
@@ -21,7 +22,6 @@
             {% endfor %}
         </tbody>
 
-        
     </table>
     <br>
     <table>

@@ -17,6 +17,11 @@ cookies = {
 }
 # KSAT: 471480
 # ORBIT: 1131791
+
+# TODO: adjust.
+MEMBERS_ORBIT = 120
+MEMBERS_KSAT = 400
+
 time = datetime.datetime.now()
 week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
@@ -203,6 +208,9 @@ with open("data/latest.json", "w") as f:
             "total_height": orbit_height + ksat_height,
             "tshirt": history["tshirt"],
             "marathon": history["marathon"],
+            "ksat_distance_per_member": sum(x["distance"] for x in orbit) / MEMBERS_KSAT,
+            "orbit_distance_per_member": sum(x["distance"] for x in ksat) / MEMBERS_ORBIT,
+            "longest_single_distance": sorted(ksat + orbit, key=lambda x: x["best_activities_distance"], reverse=True)[0],
         },
         f,
         indent=2,
