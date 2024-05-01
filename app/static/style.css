@@ -121,3 +121,40 @@ a:hover {
     text-decoration:none; 
     cursor:pointer;  
 }
+
+.progress {
+    border-width: 0px;
+    border-radius: 5px;
+    border-style: solid;
+    margin-top: 20px;
+    height: 25px;
+    display: inline-block;
+}
+
+.ksat {
+    background-color: #321b4c;
+}
+
+.orbit {
+    background-color: rgb(37,99,235);
+}
+
+.bar-distance {
+    font-size: 30px;
+    margin-left: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.bar-distance > span {
+    font-size: 10px;
+}
+
+.progress-section {
+    display: flex;
+}
+
+.infotext {
+    font-size: 20px;
+    text-align: center;
+}

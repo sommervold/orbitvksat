@@ -30,7 +30,7 @@ week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
 )
 
-use_cache = False
+use_cache = True
 if not use_cache:
     ksat_w1 = requests.get(
         "https://strava.com/clubs/471480/leaderboard?week_offset=1", headers=headers, cookies=cookies
@@ -217,6 +217,16 @@ with open("data/latest.json", "w") as f:
     for athlete in history["marathon"]:
         athlete["athlete"]["org_pic"] = KSAT_LOGO if athlete["athlete"]["org"] == "ksat" else ORBIT_LOGO
         athlete["time"] = datetime.datetime.fromisoformat(athlete["time"]).strftime("%d-%m-%Y %H:%M")
+
+    ksat_dpm = pretty(sum(x["distance"] * 1000 for x in orbit) / MEMBERS_KSAT)
+    orbit_dpm = pretty(sum(x["distance"] * 1000 for x in ksat) / MEMBERS_ORBIT)
+
+    total_time = (datetime.datetime(2024, 5, 27) - datetime.datetime(2024, 4, 29)).total_seconds()
+    since_start = (datetime.datetime.now() - datetime.datetime(2024, 4, 29)).total_seconds()
+    percentage_done = since_start/total_time
+    orbit_progress = percentage_done * min(orbit_dpm / ksat_dpm, 1) * 80
+    ksat_progress = percentage_done * min(ksat_dpm / orbit_dpm, 1) * 80 # this 80 is to make stuff align on the webpage lol
+    
     json.dump(
         {
             "orbit_height": int(orbit_height),
@@ -229,9 +239,11 @@ with open("data/latest.json", "w") as f:
             "total_height": int(orbit_height + ksat_height),
             "tshirt": history["tshirt"],
             "marathon": history["marathon"],
-            "ksat_distance_per_member": pretty(sum(x["distance"] * 1000 for x in orbit) / MEMBERS_KSAT),
-            "orbit_distance_per_member": pretty(sum(x["distance"] * 1000 for x in ksat) / MEMBERS_ORBIT),
+            "ksat_distance_per_member": ksat_dpm,
+            "orbit_distance_per_member": orbit_dpm,
             "longest_single_distance": longest_athlete,
+            "orbit_progress": orbit_progress,
+            "ksat_progress": ksat_progress,
         },
         f,
         indent=2,

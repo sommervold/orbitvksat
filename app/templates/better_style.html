@@ -6,25 +6,46 @@
     <title>Athlete Statistics</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<!-- hvis du leser dette - forbered deg på et koderot haha -->
 <body>
     <div class="container">
-        <h1>KSAT vs Orbit</h1>
 
-        <div class="section important">
+        <div class="section">
             <div class="split">
-                <div class="data">
-                    <p><strong>KSAT:</strong></p>
-                    <p>Distance: {{ data["ksat_length"] }} km</p>
-                    <p>Height: {{ data["ksat_height"] }} m</p>
-                    <p>Distance per employee: {{ data["ksat_distance_per_member"] }} km</p>
+                <div class="data" style="display: flex; justify-content: center;">
+                    <div>
+                        <img src="/static/ksat.png" style="width: 250px; height: auto;">
+                        <p class="infotext">Employees: 400</p>
+                        <p class="infotext">Total distance: {{ data["ksat_length"] }} km</p>
+                        <p class="infotext">Vertical distance: {{ data["ksat_height"] }} m</p>
+                    </div>
                 </div>
-                <div class="data">
-                    <p><strong>Orbit:</strong></p>
-                    <p>Distance: {{ data["orbit_length"] }} km</p>
-                    <p>Height: {{ data["orbit_height"] }} m</p>
-                    <p>Distance per member: {{ data["orbit_distance_per_member"] }} km</p>
+                <div>
+                    <h1>VS</h1>
+                </div>
+                <div class="data"  style="display: flex; justify-content: center;">
+                    <div>
+                        <img src="/static/orbit.png" style="width: 250px; height: auto;">
+                        <p class="infotext">Members: 120</p>
+                        <p class="infotext">Total istance: {{ data["orbit_length"] }} km</p>
+                        <p class="infotext">Vertical distance: {{ data["orbit_height"] }} m</p>
+                    </div>
                 </div>
             </div>
+            <div style="margin-top: 40px; margin-bottom: 100px;">
+                <div style="width: 100%; position: relative;">
+                    <div style="background-color: red; width: 3px; height: 100px; position: absolute; z-index: 0; margin-left: 80%;"></div>
+                    <div class="progress ksat" style="width: {{ data['ksat_progress'] }}%;"></div>
+                    
+                    <img src="/static/ksat.png" style="width: 50px; height: auto; z-index: 1; position: relative;">
+                    <span class="bar-distance">{{ data['ksat_distance_per_member'] }}<span>km/employee</span></span>
+                    <br>
+                    <div class="progress orbit" style="width: {{ data['orbit_progress'] }}%;"></div>
+                    <img src="/static/orbit.png" style="width: 50px; height: auto; z-index: 1; position: relative;">
+                    <span class="bar-distance">{{ data['orbit_distance_per_member'] }}<span>km/member</span></span>
+                </div>
+            </div>
+        
         </div>
 
         <div class="section">
