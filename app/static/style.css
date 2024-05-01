@@ -106,3 +106,8 @@ tbody tr:hover {
     height: auto;
     border-radius: 50%;
 }
+
+.org-pic {
+    width: 30px;
+    height: auto;
+}

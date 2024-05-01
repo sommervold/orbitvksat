@@ -4,6 +4,8 @@ import json
 
 app = Flask(__name__)
 
+app.config["UPLOAD_FOLDER"] = "static"
+
 @app.route("/")
 def index():
     with open("data/latest.json", "r") as f:

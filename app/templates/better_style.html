@@ -14,15 +14,15 @@
             <div class="split">
                 <div class="data">
                     <p><strong>KSAT:</strong></p>
-                    <p>Length: {{ data["ksat_length"] }}</p>
-                    <p>Height: {{ data["ksat_height"] }}</p>
-                    <p>Distance per employee: {{ data["ksat_distance_per_member"] }}</p>
+                    <p>Distance: {{ data["ksat_length"] }} km</p>
+                    <p>Height: {{ data["ksat_height"] }} m</p>
+                    <p>Distance per employee: {{ data["ksat_distance_per_member"] }} km</p>
                 </div>
                 <div class="data">
                     <p><strong>Orbit:</strong></p>
-                    <p>Length: {{ data["orbit_length"] }}</p>
-                    <p>Height: {{ data["orbit_height"] }}</p>
-                    <p>Distance per member: {{ data["orbit_distance_per_member"] }}</p>
+                    <p>Distance: {{ data["orbit_length"] }} km</p>
+                    <p>Height: {{ data["orbit_height"] }} m</p>
+                    <p>Distance per member: {{ data["orbit_distance_per_member"] }} km</p>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="section">
             <h2>Longest Single Distance</h2>
             <p>
-                Athlete: {{ data["longest_single_distance"]["athlete_firstname"] }} {{ data["longest_single_distance"]["athlete_lastname"] }}, Distance: {{ data["longest_single_distance"]["best_activities_distance"] }}
+                Athlete: {{ data["longest_single_distance"]["athlete_firstname"] }} {{ data["longest_single_distance"]["athlete_lastname"] }}, Distance: {{ data["longest_single_distance"]["best_activities_distance"] }} km
             </p>
         </div>
 
@@ -42,7 +42,7 @@
                         <tr>
                             <th></th>
                             <th>Name</th>
-                            <th>Length</th>
+                            <th>Distance</th>
                             <th>Organization</th>
                         </tr>
                     </thead>
@@ -51,8 +51,8 @@
                         <tr>
                             <td><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
                             <td>{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</td>
-                            <td>{{ athlete["distance"] }}</td>
-                            <td>{{ athlete["org"] }}</td>
+                            <td>{{ athlete["distance"] }} km</td>
+                            <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -75,8 +75,8 @@
                         <tr>
                             <td><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
                             <td>{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</td>
-                            <td>{{ athlete["elev_gain"] }}</td>
-                            <td>{{ athlete["org"] }}</td>
+                            <td>{{ athlete["elev_gain"] }} m</td>
+                            <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -103,7 +103,7 @@
                             <td><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
                             <td>{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</td>
                             <td>{{ athlete["time"] }}</td>
-                            <td>{{ athlete["athlete"]["org"] }}</td>
+                            <td><img src="{{ url_for('static', filename=athlete['athlete']['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -127,7 +127,7 @@
                             <td><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
                             <td>{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</td>
                             <td>{{ athlete["time"] }}</td>
-                            <td>{{ athlete["athlete"]["org"] }}</td>
+                            <td><img src="{{ url_for('static', filename=athlete['athlete']['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
                         {% endfor %}
                     </tbody>

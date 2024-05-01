@@ -22,6 +22,9 @@ cookies = {
 MEMBERS_ORBIT = 120
 MEMBERS_KSAT = 400
 
+KSAT_LOGO = "ksat.png"
+ORBIT_LOGO = "orbit.png"
+
 time = datetime.datetime.now()
 week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
@@ -195,22 +198,40 @@ history["ksat"].append({
 with open("data/history.json", "w") as f:
     json.dump(history, f, indent=2)
 
+def pretty(num, div=1000):
+    return round(num/div, 1)
+
 with open("data/latest.json", "w") as f:
+    for athlete in longest:
+        athlete["distance"] = pretty(athlete["distance"])
+        athlete["org_pic"] = KSAT_LOGO if athlete["org"] == "ksat" else ORBIT_LOGO
+    for athlete in highest:
+        athlete["elev_gain"] = int(athlete["elev_gain"])
+        athlete["org_pic"] = KSAT_LOGO if athlete["org"] == "ksat" else ORBIT_LOGO
+
+    longest_athlete = sorted(ksat + orbit, key=lambda x: x["best_activities_distance"], reverse=True)[0]
+    longest_athlete["best_activities_distance"] = pretty(longest_athlete["best_activities_distance"])
+    for athlete in history["tshirt"]:
+        athlete["time"] = datetime.datetime.fromisoformat(athlete["time"]).strftime("%d-%m-%Y %H:%M")
+        athlete["athlete"]["org_pic"] = KSAT_LOGO if athlete["athlete"]["org"] == "ksat" else ORBIT_LOGO
+    for athlete in history["marathon"]:
+        athlete["athlete"]["org_pic"] = KSAT_LOGO if athlete["athlete"]["org"] == "ksat" else ORBIT_LOGO
+        athlete["time"] = datetime.datetime.fromisoformat(athlete["time"]).strftime("%d-%m-%Y %H:%M")
     json.dump(
         {
-            "orbit_height": orbit_height,
-            "ksat_height": ksat_height,
-            "orbit_length": orbit_length,
-            "ksat_length": ksat_length,
+            "orbit_height": int(orbit_height),
+            "ksat_height": int(ksat_height),
+            "orbit_length": pretty(orbit_length),
+            "ksat_length": pretty(ksat_length),
             "longest": longest[:10],
             "highest": highest[:10],
-            "total_length": orbit_length + ksat_length,
-            "total_height": orbit_height + ksat_height,
+            "total_length": pretty(orbit_length + ksat_length),
+            "total_height": int(orbit_height + ksat_height),
             "tshirt": history["tshirt"],
             "marathon": history["marathon"],
-            "ksat_distance_per_member": sum(x["distance"] for x in orbit) / MEMBERS_KSAT,
-            "orbit_distance_per_member": sum(x["distance"] for x in ksat) / MEMBERS_ORBIT,
-            "longest_single_distance": sorted(ksat + orbit, key=lambda x: x["best_activities_distance"], reverse=True)[0],
+            "ksat_distance_per_member": pretty(sum(x["distance"] * 1000 for x in orbit) / MEMBERS_KSAT),
+            "orbit_distance_per_member": pretty(sum(x["distance"] * 1000 for x in ksat) / MEMBERS_ORBIT),
+            "longest_single_distance": longest_athlete,
         },
         f,
         indent=2,
