@@ -49,8 +49,8 @@
                     <tbody>
                         {% for athlete in data["longest"] %}
                         <tr>
-                            <td><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
-                            <td>{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</a></td>
                             <td>{{ athlete["distance"] }} km</td>
                             <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
@@ -73,8 +73,8 @@
                     <tbody>
                         {% for athlete in data["highest"] %}
                         <tr>
-                            <td><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
-                            <td>{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</a></td>
                             <td>{{ athlete["elev_gain"] }} m</td>
                             <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
@@ -100,8 +100,8 @@
                     <tbody>
                         {% for athlete in data["tshirt"] %}
                         <tr>
-                            <td><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
-                            <td>{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete']['athlete_id']}}"><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete']['athlete_id']}}">{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</a></td>
                             <td>{{ athlete["time"] }}</td>
                             <td><img src="{{ url_for('static', filename=athlete['athlete']['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
@@ -124,8 +124,8 @@
                     <tbody>
                         {% for athlete in data["marathon"] %}
                         <tr>
-                            <td><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></td>
-                            <td>{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete']['athlete_id']}}"><img src="{{ athlete['athlete']['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete']['athlete_id']}}">{{ athlete["athlete"]["athlete_firstname"] }} {{ athlete["athlete"]["athlete_lastname"] }}</a></td>
                             <td>{{ athlete["time"] }}</td>
                             <td><img src="{{ url_for('static', filename=athlete['athlete']['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
