@@ -260,6 +260,8 @@ with open("data/latest.json", "w") as f:
             "longest_single_distance": longest_athlete,
             "orbit_progress": orbit_progress,
             "ksat_progress": ksat_progress,
+            "tshirt_count": len(history["tshirt"]),
+            "marathon_count": len(history["marathon"]),
         },
         f,
         indent=2,
