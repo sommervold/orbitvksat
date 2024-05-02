@@ -30,7 +30,7 @@ week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
 )
 
-use_cache = True
+use_cache = False
 if not use_cache:
     ksat_w1 = requests.get(
         "https://strava.com/clubs/471480/leaderboard?week_offset=1", headers=headers, cookies=cookies
