@@ -56,15 +56,6 @@ if not use_cache:
 
 # read data
 orbit_banned = [
-    56894134, # Aslak Strand
-    34927378, # Astrid Fossum 
-    67451048, # Markus A. Stokkenes
-    117676646, # Dabrowka Knach
-    1270026, # Roy Sorensen
-    34235219 # Carl H Jonsson
-]
-ksat_banned = [
-    47158881,  # Freider
     53367167, # Erlend Nesse
     134535626, # Dennis Langer
     118959474, # Hans Kristian 
@@ -74,6 +65,16 @@ ksat_banned = [
     92922838, # Sumeyo Sharif
     117191735, # Tim Matras
     8804086 # Ulrik Falk-Petersen
+]
+ksat_banned = [
+    47158881,  # Freider Engstrøm Fløan
+    56894134, # Aslak Strand
+    34927378, # Astrid Fossum 
+    67451048, # Markus A. Stokkenes
+    117676646, # Dabrowka Knach
+    1270026, # Roy Sorensen
+    34235219, # Carl H Jonsson
+    23605581 # Rasmus Nordahl
 ]
 
 orbit = []
