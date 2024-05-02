@@ -21,7 +21,28 @@
                     </div>
                 </div>
                 <div>
-                    <h1>VS</h1>
+                    <h1 style="text-align: center; margin-bottom: 50px;">VS</h1>
+                    <ul>
+                        <div>
+                            <li id="days">0</li>
+                            <li>Days</li>
+                        </div>
+                        <div>
+                            <li id="hours">0</li>
+                            <li>Hours</li>
+                        </div>
+                        <div>
+                            <li id="minutes">0</li>
+                            <li>Minutes</li>
+                        </div>
+                        <div>
+                            <li id="seconds">0</li>
+                            <li>Seconds</li>
+                        </div>
+                    </ul>
+                    <ul>
+
+                    </ul>
                 </div>
                 <div class="data"  style="display: flex; justify-content: center;">
                     <div>
@@ -165,6 +186,23 @@
             <a href="https://github.com/sommervold" target="_blank" style="text-decoration: none; color: #007bff; font-size: 14px;">Visit my GitHub profile</a>
         </div>
     </footer>
-    
+    <script type="text/javascript">
+        const updateTimer = () => {
+            let now = new Date();
+            let end = new Date(2024, 4, 27, 0, 0, 0);
+            let time_left = (end - now) / 1000;
+            days = Math.floor(time_left/(24*3600))
+            hours = Math.floor((time_left%(24*3600))/3600)
+            minutes = Math.floor((time_left%3600)/60)
+            seconds = Math.floor(time_left%60)
+            document.getElementById("days").innerHTML = days
+            document.getElementById("hours").innerHTML = hours
+            document.getElementById("minutes").innerHTML = minutes
+            document.getElementById("seconds").innerHTML = seconds
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    </script>
 </body>
 </html>
