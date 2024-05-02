@@ -71,7 +71,6 @@ ksat_banned = [
     58732624, # Nora Trohaug
     55631939, # Olivia Skibelid
     80290094, # Oscar Langfoss
-    106271302, # Patric Andre Berthelsen 
     92922838, # Sumeyo Sharif
     117191735, # Tim Matras
     8804086 # Ulrik Falk-Petersen
