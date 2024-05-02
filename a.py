@@ -55,9 +55,26 @@ if not use_cache:
 
 
 # read data
-orbit_banned = []
+orbit_banned = [
+    56894134, # Aslak Strand
+    34927378, # Astrid Fossum 
+    67451048, # Markus A. Stokkenes
+    117676646, # Dabrowka Knach
+    1270026, # Roy Sorensen
+    34235219 # Carl H Jonsson
+]
 ksat_banned = [
     47158881,  # Freider
+    53367167, # Erlend Nesse
+    134535626, # Dennis Langer
+    118959474, # Hans Kristian 
+    58732624, # Nora Trohaug
+    55631939, # Olivia Skibelid
+    80290094, # Oscar Langfoss
+    106271302, # Patric Andre Berthelsen 
+    92922838, # Sumeyo Sharif
+    117191735, # Tim Matras
+    8804086 # Ulrik Falk-Petersen
 ]
 
 orbit = []
