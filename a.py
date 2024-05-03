@@ -145,23 +145,34 @@ for i in range(-1, week_num + 1):
             member["org"] = "ksat"
             ksat.append(member)
     if i >= 0:
-        orbit_weeks["improved_distance"][i] = round(
-            100 * (orbit_weeks["distance"][i] / orbit_weeks["distance"][i - 1] - 1),
-            1,
-        )
-        ksat_weeks["improved_distance"][i] = round(
-            100 * (ksat_weeks["distance"][i] / ksat_weeks["distance"][i - 1] - 1),
-            1,
-        )
-        orbit_weeks["improved_height"][i] = round(
-            100 * (orbit_weeks["height"][i] / orbit_weeks["height"][i - 1] - 1),
-            1,
-        )
-        ksat_weeks["improved_height"][i] = round(
-            100 * (ksat_weeks["height"][i] / ksat_weeks["height"][i - 1] - 1),
-            1,
-        )
-
+        try:
+            orbit_weeks["improved_distance"][i] = round(
+                100 * (orbit_weeks["distance"][i] / orbit_weeks["distance"][i - 1] - 1),
+                1,
+            )
+        except ZeroDivisionError:
+            orbit_weeks["improved_distance"][i] = float("-inf")
+        try:
+            ksat_weeks["improved_distance"][i] = round(
+                100 * (ksat_weeks["distance"][i] / ksat_weeks["distance"][i - 1] - 1),
+                1,
+            )
+        except ZeroDivisionError:
+            ksat_weeks["improved_distance"][i] = float("-inf")
+        try:
+            orbit_weeks["improved_height"][i] = round(
+                100 * (orbit_weeks["height"][i] / orbit_weeks["height"][i - 1] - 1),
+                1,
+            )
+        except ZeroDivisionError:
+            orbit_weeks["improved_height"][i] = float("-inf")
+        try:
+            ksat_weeks["improved_height"][i] = round(
+                100 * (ksat_weeks["height"][i] / ksat_weeks["height"][i - 1] - 1),
+                1,
+            )
+        except ZeroDivisionError:
+            ksat_weeks["improved_height"][i] = float("-inf")
 ksat_weeks_strings = []
 orbit_weeks_strings = []
 for i in range(-1, week_num + 1):
