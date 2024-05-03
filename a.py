@@ -234,7 +234,8 @@ for member in ksat + orbit:
             break
     else:
         history["marathon"].append({"athlete": member, "time": time.isoformat()})
-
+if "latest_activity" not in history:
+    history["latest_activity"] = []
 for athlete in ksat + orbit:
     id = str(athlete["athlete_id"])
 
@@ -243,12 +244,21 @@ for athlete in ksat + orbit:
             "firstname": athlete["athlete_firstname"],
             "lastname": athlete["athlete_lastname"],
             "picture": athlete["athlete_picture_url"],
-            "history": [],
+            "history": [{
+                "time": time.isoformat(),
+                "distance": 0,
+                "height": 0,
+                "moving_time": 0,
+                "num_activities":0,
+                "velocity": 0,
+                "height_rank": 0,
+                "length_rank": 0,
+            }],
         }
     else:
         if athlete["athlete_picture_url"] != "/assets/avatar/athlete/medium.png":
-            history["athletes"][id]["picture"] = member["athlete_picture_url"]
-            history["athletes"][id]["lastname"] = member["athlete_lastname"]
+            history["athletes"][id]["picture"] = athlete["athlete_picture_url"]
+            history["athletes"][id]["lastname"] = athlete["athlete_lastname"]
 
     athlete2 = history["athletes"][id]
     athlete2["history"].append(
@@ -263,6 +273,20 @@ for athlete in ksat + orbit:
             "length_rank": athlete["length_rank"],
         }
     )
+    hist1 = athlete2["history"][-1]
+    hist2 = athlete2["history"][-2]
+    if hist1["distance"] > hist2["distance"]:
+        # athlete has had an activity
+        org = "ksat" if athlete in ksat else "orbit"
+        history["latest_activity"].append({
+            "time": time.isoformat(),
+            "distance": hist1["distance"] - hist2["distance"],
+            "height": hist1["height"] - hist2["height"],
+            "picture": athlete2["picture"],
+            "name": athlete2["firstname"] + " " + athlete2["lastname"],
+            "athlete_id": id,
+            "org": org,
+        })
 
 history["orbit"].append(
     {
@@ -320,6 +344,11 @@ with open("data/latest.json", "w") as f:
         athlete["time"] = datetime.datetime.fromisoformat(athlete["time"]).strftime(
             "%d-%m-%Y %H:%M"
         )
+    
+    for run in history["latest_activity"]:
+        run["distance"] = pretty(run["distance"])
+        run["height"] = int(run["height"])
+        run["org_pic"] = KSAT_LOGO if run["org"] == "ksat" else ORBIT_LOGO
 
     ksat_dpm = pretty(sum(x["distance"] * 1000 for x in orbit) / MEMBERS_KSAT)
     orbit_dpm = pretty(sum(x["distance"] * 1000 for x in ksat) / MEMBERS_ORBIT)
@@ -357,10 +386,9 @@ with open("data/latest.json", "w") as f:
             "marathon_count": len(history["marathon"]),
             "ksat_weeks": ksat_weeks_strings,
             "orbit_weeks": orbit_weeks_strings,
+            "latest_activity": history["latest_activity"][-10:],
         },
         f,
         indent=2,
     )
 
-for s in ksat_weeks_strings:
-    print(s)
