@@ -151,28 +151,28 @@ for i in range(-1, week_num + 1):
                 1,
             )
         except ZeroDivisionError:
-            orbit_weeks["improved_distance"][i] = float("-inf")
+            orbit_weeks["improved_distance"][i] = -100
         try:
             ksat_weeks["improved_distance"][i] = round(
                 100 * (ksat_weeks["distance"][i] / ksat_weeks["distance"][i - 1] - 1),
                 1,
             )
         except ZeroDivisionError:
-            ksat_weeks["improved_distance"][i] = float("-inf")
+            ksat_weeks["improved_distance"][i] = -100
         try:
             orbit_weeks["improved_height"][i] = round(
                 100 * (orbit_weeks["height"][i] / orbit_weeks["height"][i - 1] - 1),
                 1,
             )
         except ZeroDivisionError:
-            orbit_weeks["improved_height"][i] = float("-inf")
+            orbit_weeks["improved_height"][i] = -100
         try:
             ksat_weeks["improved_height"][i] = round(
                 100 * (ksat_weeks["height"][i] / ksat_weeks["height"][i - 1] - 1),
                 1,
             )
         except ZeroDivisionError:
-            ksat_weeks["improved_height"][i] = float("-inf")
+            ksat_weeks["improved_height"][i] = -100
 ksat_weeks_strings = []
 orbit_weeks_strings = []
 for i in range(-1, week_num + 1):
