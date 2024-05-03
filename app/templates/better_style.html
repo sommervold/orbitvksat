@@ -90,6 +90,7 @@
                         <tr>
                             <th></th>
                             <th>Name</th>
+                            <th>Time</th>
                             <th>Distance</th>
                             <th>Elevation</th>
                             <th>Organization</th>
@@ -100,6 +101,7 @@
                         <tr>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["name"] }}</a></td>
+                            <td>{{ athlete["time"] }}</td>
                             <td>{{ athlete["distance"] }} km</td>
                             <td>{{ athlete["height"] }} m</td>
                             <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
@@ -109,16 +111,33 @@
                 </table>
             </div>
             <div class="split-section">
-                <h2>Longest Single Distance</h2>
-                <p>
-                    Athlete: {{ data["longest_single_distance"]["athlete_firstname"] }} {{ data["longest_single_distance"]["athlete_lastname"] }}, Distance: {{ data["longest_single_distance"]["best_activities_distance"] }} km
-                </p>
+                <h2>Longest single distance</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Distance</th>
+                            <th>Organization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for athlete in data["longest_single_distance"] %}
+                        <tr>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</a></td>
+                            <td>{{ athlete["best_activities_distance"] }} km</td>
+                            <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
 
         <div class="section split">
             <div class="split-section">
-                <h2>Longest Distances by Athlete</h2>
+                <h2>Total Distance by Athlete</h2>
                 <table>
                     <thead>
                         <tr>
@@ -142,7 +161,7 @@
             </div>
 
             <div class="split-section">
-                <h2>Highest Elevations</h2>
+                <h2>Total Elevation by Athlete</h2>
                 <table>
                     <thead>
                         <tr>

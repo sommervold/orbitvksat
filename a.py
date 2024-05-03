@@ -324,15 +324,15 @@ with open("data/latest.json", "w") as f:
         athlete["elev_gain"] = int(athlete["elev_gain"])
         athlete["org_pic"] = KSAT_LOGO if athlete["org"] == "ksat" else ORBIT_LOGO
 
-    longest_athlete = sorted(
+    longest_athletes = sorted(
         ksat + orbit, key=lambda x: x["best_activities_distance"], reverse=True
-    )[0]
-    longest_athlete["best_activities_distance"] = pretty(
-        longest_athlete["best_activities_distance"]
-    )
+    )[:10]
+    for athlete in longest_athletes:
+        athlete["best_activities_distance"] = pretty(athlete["best_activities_distance"])
+
     for athlete in history["tshirt"]:
         athlete["time"] = datetime.datetime.fromisoformat(athlete["time"]).strftime(
-            "%d-%m-%Y %H:%M"
+            "%d %B %H:%M"
         )
         athlete["athlete"]["org_pic"] = (
             KSAT_LOGO if athlete["athlete"]["org"] == "ksat" else ORBIT_LOGO
@@ -342,13 +342,14 @@ with open("data/latest.json", "w") as f:
             KSAT_LOGO if athlete["athlete"]["org"] == "ksat" else ORBIT_LOGO
         )
         athlete["time"] = datetime.datetime.fromisoformat(athlete["time"]).strftime(
-            "%d-%m-%Y %H:%M"
+            "%d %B %H:%M"
         )
     
     for run in history["latest_activity"]:
         run["distance"] = pretty(run["distance"])
         run["height"] = int(run["height"])
         run["org_pic"] = KSAT_LOGO if run["org"] == "ksat" else ORBIT_LOGO
+        run["time"] = datetime.datetime.fromisoformat(run["time"]).strftime("%d %B %H:%M")
 
     ksat_dpm = pretty(sum(x["distance"] * 1000 for x in orbit) / MEMBERS_KSAT)
     orbit_dpm = pretty(sum(x["distance"] * 1000 for x in ksat) / MEMBERS_ORBIT)
@@ -379,14 +380,14 @@ with open("data/latest.json", "w") as f:
             "marathon": history["marathon"],
             "ksat_distance_per_member": ksat_dpm,
             "orbit_distance_per_member": orbit_dpm,
-            "longest_single_distance": longest_athlete,
+            "longest_single_distance": longest_athletes,
             "orbit_progress": orbit_progress,
             "ksat_progress": ksat_progress,
             "tshirt_count": len(history["tshirt"]),
             "marathon_count": len(history["marathon"]),
             "ksat_weeks": ksat_weeks_strings,
             "orbit_weeks": orbit_weeks_strings,
-            "latest_activity": history["latest_activity"][-10:],
+            "latest_activity": history["latest_activity"][-10:][::-1],
         },
         f,
         indent=2,
