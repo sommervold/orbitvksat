@@ -30,7 +30,7 @@ week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
 )
 
-use_cache = False
+use_cache = True
 if not use_cache:
     ksat_w1 = requests.get(
         "https://strava.com/clubs/471480/leaderboard?week_offset=1",
@@ -95,9 +95,14 @@ orbit_weeks = {
     "improved_distance": [0, 0, 0, 0, 0],
     "improved_height": [0, 0, 0, 0, 0],
 }
-for i in range(-1, week_num + 1):
-    with open(f"data/{i}.json", "r") as f:
-        data = json.load(f)
+for i in range(-1, week_num + 2):
+    if i == week_num + 1:
+        # use compensation
+        with open("data/compensation.json") as f:
+            data = json.load(f)
+    else:
+        with open(f"data/{i}.json", "r") as f:
+            data = json.load(f)
     # jada duplikat men who cares
     for member in data["orbit"]:
         if member["athlete_id"] in orbit_banned:
@@ -108,7 +113,6 @@ for i in range(-1, week_num + 1):
             continue
         for member2 in orbit:
             if member2["athlete_id"] == member["athlete_id"]:
-                member2["duration"] += member["duration"]
                 member2["num_activities"] += member["num_activities"]
                 member2["elev_gain"] += member["elev_gain"]
                 member2["moving_time"] += member["moving_time"]
