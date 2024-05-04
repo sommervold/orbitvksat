@@ -185,11 +185,13 @@ for i in range(-1, week_num + 1):
     ksat_weeks["height"][i] = int(ksat_weeks["height"][i])
     ksat_weeks["improved_distance"][i] = round(ksat_weeks["improved_distance"][i], 1)
     ksat_weeks["improved_height"][i] = round(ksat_weeks["improved_height"][i], 1)
+
+    wn = i if i != 0 else i+1 
     ksat_weeks_strings.append(
-        f"Week {i+1}: {ksat_weeks['distance'][i]:>6}km ({('+' if ksat_weeks['improved_distance'][i] >= 0 else '-') + str(ksat_weeks['improved_distance'][i]):>5}%), {ksat_weeks['height'][i]:>5}m ({('+' if ksat_weeks['improved_height'][i] >= 0 else '-') + str(ksat_weeks['improved_height'][i]):>5}%)"
+        f"Week {wn}: {ksat_weeks['distance'][i]:>6}km ({('+' if ksat_weeks['improved_distance'][i] >= 0 else '-') + str(ksat_weeks['improved_distance'][i]):>5}%), {ksat_weeks['height'][i]:>5}m ({('+' if ksat_weeks['improved_height'][i] >= 0 else '-') + str(ksat_weeks['improved_height'][i]):>5}%)"
     )
     orbit_weeks_strings.append(
-        f"Week {i+1}: {orbit_weeks['distance'][i]:>6}km ({('+' if orbit_weeks['improved_distance'][i] >= 0 else '-') + str(orbit_weeks['improved_distance'][i]):>5}%), {orbit_weeks['height'][i]:>5}m ({('+' if orbit_weeks['improved_height'][i] >= 0 else '-') + str(orbit_weeks['improved_height'][i]):>5}%)"
+        f"Week {wn}: {orbit_weeks['distance'][i]:>6}km ({('+' if orbit_weeks['improved_distance'][i] >= 0 else '-') + str(orbit_weeks['improved_distance'][i]):>5}%), {orbit_weeks['height'][i]:>5}m ({('+' if orbit_weeks['improved_height'][i] >= 0 else '-') + str(orbit_weeks['improved_height'][i]):>5}%)"
     )
 
 ksat_length = sum(x["distance"] for x in ksat)
