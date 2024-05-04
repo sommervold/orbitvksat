@@ -20,7 +20,7 @@ cookies = {
 
 # TODO: adjust.
 MEMBERS_ORBIT = 107
-MEMBERS_KSAT = 450
+MEMBERS_KSAT = 423
 
 KSAT_LOGO = "ksat.png"
 ORBIT_LOGO = "orbit.png"
