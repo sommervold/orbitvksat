@@ -127,7 +127,8 @@ a:hover {
     border-radius: 5px;
     border-style: solid;
     margin-top: 20px;
-    height: 25px;
+    margin-right: 20px;
+    height: 45px;
     display: inline-block;
 }
 
@@ -140,7 +141,7 @@ a:hover {
 }
 
 .bar-distance {
-    font-size: 30px;
+    font-size: 45px;
     margin-left: 5px;
     position: relative;
     z-index: 1;
