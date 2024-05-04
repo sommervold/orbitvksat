@@ -362,8 +362,8 @@ with open("data/latest.json", "w") as f:
         run["org_pic"] = KSAT_LOGO if run["org"] == "ksat" else ORBIT_LOGO
         run["time"] = datetime.datetime.fromisoformat(run["time"]).strftime("%d %B %H:%M")
 
-    ksat_dpm = pretty(sum(x["distance"] * 1000 for x in orbit) / MEMBERS_KSAT)
-    orbit_dpm = pretty(sum(x["distance"] * 1000 for x in ksat) / MEMBERS_ORBIT)
+    ksat_dpm = pretty(sum(x["distance"] * 1000 for x in ksat) / MEMBERS_KSAT)
+    orbit_dpm = pretty(sum(x["distance"] * 1000 for x in orbit) / MEMBERS_ORBIT)
 
     total_time = (
         datetime.datetime(2024, 5, 27) - datetime.datetime(2024, 4, 29)
