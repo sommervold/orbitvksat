@@ -1,6 +1,7 @@
 import requests
 import datetime
 import json
+import tomllib
 
 headers = {
     "Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript",
@@ -30,7 +31,13 @@ week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
 )
 
-use_cache = False
+try:
+    with open("config.toml", "rb") as f:
+        config = tomllib.load(f)
+        use_cache = config["use_cache"]
+except FileNotFoundError:
+    use_cache = False
+
 if not use_cache:
     ksat_w1 = requests.get(
         "https://strava.com/clubs/471480/leaderboard?week_offset=1",
