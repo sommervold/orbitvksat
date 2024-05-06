@@ -27,6 +27,12 @@ KSAT_LOGO = "ksat.png"
 ORBIT_LOGO = "orbit.png"
 
 time = datetime.datetime.now()
+
+if time.weekday() == 0 and time.hour == 0 and time.minute == 0 and time.second == 0:
+    # seemed like something really weird happened on the week-change,
+    # so make sure to not check immediately after a new week has started.
+    quit(0)
+
 week_num = int(
     (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
 )
