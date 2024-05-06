@@ -2,6 +2,7 @@ import requests
 import datetime
 import json
 import tomllib
+import time
 
 headers = {
     "Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript",
@@ -26,15 +27,16 @@ MEMBERS_KSAT = 423
 KSAT_LOGO = "ksat.png"
 ORBIT_LOGO = "orbit.png"
 
-time = datetime.datetime.now()
+read_time = datetime.datetime.now()
 
-if time.weekday() == 0 and time.hour == 0 and time.minute == 0 and time.second == 0:
+if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
     # seemed like something really weird happened on the week-change,
     # so make sure to not check immediately after a new week has started.
+    # 20 mins is probably way too much but better safe.
     quit(0)
 
 week_num = int(
-    (time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
+    (read_time - datetime.datetime(2024, 4, 29)).total_seconds() // (3600 * 24 * 7)
 )
 
 try:
@@ -251,7 +253,7 @@ for member in ksat + orbit:
                 member2["athlete"]["athlete_lastname"] = member["athlete_lastname"]
             break
     else:
-        history["tshirt"].append({"athlete": member, "time": time.isoformat()})
+        history["tshirt"].append({"athlete": member, "time": read_time.isoformat()})
 
 for member in ksat + orbit:
     if member["distance"] < 100000:
@@ -263,7 +265,7 @@ for member in ksat + orbit:
                 member2["athlete_lastname"] = member["athlete_lastname"]
             break
     else:
-        history["marathon"].append({"athlete": member, "time": time.isoformat()})
+        history["marathon"].append({"athlete": member, "time": read_time.isoformat()})
 if "latest_activity" not in history:
     history["latest_activity"] = []
 for athlete in ksat + orbit:
@@ -275,7 +277,7 @@ for athlete in ksat + orbit:
             "lastname": athlete["athlete_lastname"],
             "picture": athlete["athlete_picture_url"],
             "history": [{
-                "time": time.isoformat(),
+                "time": read_time.isoformat(),
                 "distance": 0,
                 "height": 0,
                 "moving_time": 0,
@@ -293,7 +295,7 @@ for athlete in ksat + orbit:
     athlete2 = history["athletes"][id]
     athlete2["history"].append(
         {
-            "time": time.isoformat(),
+            "time": read_time.isoformat(),
             "distance": athlete["distance"],
             "height": athlete["elev_gain"],
             "moving_time": athlete["moving_time"],
@@ -309,7 +311,7 @@ for athlete in ksat + orbit:
         # athlete has had an activity
         org = "ksat" if athlete in ksat else "orbit"
         history["latest_activity"].append({
-            "time": time.isoformat(),
+            "time": read_time.isoformat(),
             "distance": hist1["distance"] - hist2["distance"],
             "height": hist1["height"] - hist2["height"],
             "picture": athlete2["picture"],
@@ -320,7 +322,7 @@ for athlete in ksat + orbit:
 
 history["orbit"].append(
     {
-        "time": time.isoformat(),
+        "time": read_time.isoformat(),
         "distance": orbit_length,
         "height": orbit_height,
         "height_rank": 1 if ksat_height >= orbit_height else 2,
@@ -330,7 +332,7 @@ history["orbit"].append(
 
 history["ksat"].append(
     {
-        "time": time.isoformat(),
+        "time": read_time.isoformat(),
         "distance": ksat_length,
         "height": ksat_height,
         "height_rank": 1 if orbit_height >= ksat_height else 2,
