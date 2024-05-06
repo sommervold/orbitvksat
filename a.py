@@ -150,7 +150,6 @@ for i in range(-1, week_num + 2):
             continue
         for member2 in ksat:
             if member2["athlete_id"] == member["athlete_id"]:
-                member2["duration"] += member["duration"]
                 member2["num_activities"] += member["num_activities"]
                 member2["elev_gain"] += member["elev_gain"]
                 member2["moving_time"] += member["moving_time"]
