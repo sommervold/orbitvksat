@@ -346,6 +346,8 @@ with open("data/history.json", "w") as f:
 def pretty(num, div=1000):
     return round(num / div, 1)
 
+orbit_thisweek = round(ksat_weeks["distance"][week_num] / MEMBERS_ORBIT, 2)
+ksat_thisweek = round(ksat_weeks["distance"][week_num] / MEMBERS_KSAT, 2)
 
 with open("data/latest.json", "w") as f:
     for athlete in longest:
@@ -403,6 +405,8 @@ with open("data/latest.json", "w") as f:
             "ksat_height": int(ksat_height),
             "orbit_length": pretty(orbit_length),
             "ksat_length": pretty(ksat_length),
+            "orbit_week": orbit_thisweek,
+            "ksat_week": ksat_thisweek,
             "longest": longest[:10],
             "highest": highest[:10],
             "total_length": pretty(orbit_length + ksat_length),
