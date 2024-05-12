@@ -346,7 +346,7 @@ with open("data/history.json", "w") as f:
 def pretty(num, div=1000):
     return round(num / div, 1)
 
-orbit_thisweek = round(ksat_weeks["distance"][week_num] / MEMBERS_ORBIT, 2)
+orbit_thisweek = round(orbit_weeks["distance"][week_num] / MEMBERS_ORBIT, 2)
 ksat_thisweek = round(ksat_weeks["distance"][week_num] / MEMBERS_KSAT, 2)
 
 with open("data/latest.json", "w") as f:
