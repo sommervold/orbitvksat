@@ -119,6 +119,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Place</th>
                             <th></th>
                             <th>Name</th>
                             <th>Distance</th>
@@ -128,6 +129,7 @@
                     <tbody>
                         {% for athlete in data["longest_single_distance"] %}
                         <tr>
+                            <td>{{ loop.index }}</td>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</a></td>
                             <td>{{ athlete["best_activities_distance"] }} km</td>
@@ -145,6 +147,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Place</th>
                             <th></th>
                             <th>Name</th>
                             <th>Distance</th>
@@ -154,6 +157,7 @@
                     <tbody>
                         {% for athlete in data["longest"] %}
                         <tr>
+                            <td>{{ loop.index }}</td>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</a></td>
                             <td>{{ athlete["distance"] }} km</td>
@@ -169,6 +173,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Place</th>
                             <th></th>
                             <th>Name</th>
                             <th>Height</th>
@@ -178,6 +183,7 @@
                     <tbody>
                         {% for athlete in data["highest"] %}
                         <tr>
+                            <td>{{ loop.index }}</td>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['athlete_picture_url'] }}" alt="Profile Picture" class="profile-pic"></a></td>
                             <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["athlete_firstname"] }} {{ athlete["athlete_lastname"] }}</a></td>
                             <td>{{ athlete["elev_gain"] }} m</td>
