@@ -254,7 +254,7 @@ for member in ksat + orbit:
     else:
         history["tshirt"].append({"athlete": member, "time": read_time.isoformat()})
 
-for member in ksat + orbit:
+for member in orbit:
     if member["distance"] < 100000:
         continue  # not qualified
     for member2 in history["marathon"]:
