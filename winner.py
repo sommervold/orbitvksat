@@ -25,7 +25,7 @@ ksat_banned = [
 
 
 # choose weekly gift-card winners
-WEEK_NUM = 0
+WEEK_NUM = 2
 NUM_WINNERS = 2
 WINNING_TEAM = "orbit"
 #WINNING_TEAM = "ksat"
