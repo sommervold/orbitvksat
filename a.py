@@ -412,7 +412,7 @@ with open("data/latest.json", "w") as f:
             "total_length": pretty(orbit_length + ksat_length),
             "total_height": int(orbit_height + ksat_height),
             "tshirt": history["tshirt"],
-            "marathon": history["marathon"][:16],
+            "marathon": history["marathon"][:15],
             "ksat_distance_per_member": ksat_dpm,
             "orbit_distance_per_member": orbit_dpm,
             "longest_single_distance": longest_athletes,
