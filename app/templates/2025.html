@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athlete Statistics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<!-- hvis du leser dette - forbered deg på et koderot haha -->
+<body>
+    <div class="container">
+
+        <div class="section">
+            <div class="split">
+                <div class="data" style="display: flex; justify-content: center;">
+                    <div style="position: relative;">
+                        <img src="/static/ksat.png" style="width: auto; height: 100px; position: absolute; left: 50%; right: 50%; transform: translate(-50%, -25%);">
+                        <!-- <p class="infotext" style="margin-top: 100px;">Employees: 550</p> -->
+                        <p class="infotext" style="margin-top: 100px;">Total distance: {{ data["ksat"]["distance"] }} km</p>
+                        <p class="infotext">Vertical distance: {{ data["ksat"]["height"] }} m</p>
+                        <p class="infotext">This week: {{ data["ksat"]["distance_week"] }} km</p>
+                        <br>
+                        {% for week in data["weeks"] %}
+                        <p class="infotext" style="white-space: pre;">{{ data["ksat"][week]["week_string"] }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div>
+                    <h1 style="text-align: center; margin-bottom: 50px;">VS</h1>
+                    <h3 style="text-align: center;">Time left:</h3>
+                    <ul>
+                        <div>
+                            <li id="days">0</li>
+                            <li>Days</li>
+                        </div>
+                        <div>
+                            <li id="hours">0</li>
+                            <li>Hours</li>
+                        </div>
+                        <div>
+                            <li id="minutes">0</li>
+                            <li>Minutes</li>
+                        </div>
+                        <div>
+                            <li id="seconds">0</li>
+                            <li>Seconds</li>
+                        </div>
+                    </ul>
+                    <ul>
+
+                    </ul>
+                </div>
+                <div class="data"  style="display: flex; justify-content: center;">
+                    <div style="position: relative;">
+                        <img src="/static/orbit.png" style="width: auto; height: 100px; position: absolute; left: 50%; right: 50%; transform: translate(-50%, -25%);">
+                        <!-- <p class="infotext" style="margin-top: 100px;">Members: 107</p> -->
+                        <p class="infotext" style="margin-top: 100px;">Total distance: {{ data["orbit"]["distance"] }} km</p>
+                        <p class="infotext">Vertical distance: {{ data["orbit"]["height"] }} m</p>
+                        <p class="infotext">This week: {{ data["orbit"]["distance_week"] }} km</p>
+                        <br>
+                        {% for week in data["weeks"] %}
+                        <p class="infotext" style="white-space: pre;">{{ data["orbit"][week]["week_string"] }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 40px; margin-bottom: 100px;">
+                <div style="width: 100%; position: relative;">
+                    <!-- <div style="background-color: red; width: 6px; height: 150px; position: absolute; z-index: 0; margin-left: 80%;"></div> -->
+                    <img src="/static/checkered_flag.png" style="width: 54px; height: 150px; position: absolute; z-index: 0; margin-left: 80%;">
+                    <!-- <span style="position: absolute; margin-left: 81%;">First to cross the line wins</span> -->
+                    <div class="progress ksat" style="width: {{ data['ksat']['progress'] }}%;"></div>
+                    
+                    <img src="/static/ksat.png" style="width: 108px; height: auto; z-index: 1; position: relative;">
+                    <span class="bar-distance">{{ data['ksat']['distance'] }}<span>km</span></span>
+                    <br>
+                    <div class="progress orbit" style="width: {{ data['orbit']['progress'] }}%;"></div>
+                    <img src="/static/orbit.png" style="width: 108px; height: auto; z-index: 1; position: relative; transform: translate(0, 20%);">
+                    <span class="bar-distance">{{ data['orbit']['distance'] }}<span>km</span></span>
+                </div>
+            </div>
+        
+        </div>
+
+        <div class="section split">
+            <div class="split-section">
+                <h2>Latest activity</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>Distance</th>
+                            <th>Elevation</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in data["latest_activity"] %}
+                        <tr>
+                            <td><a href="https://strava.com/athletes/{{activity['athlete_id']}}"><img src="{{ activity['athlete']['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['athlete_id']}}">{{ activity["athlete"]["name"] }}</a></td>
+                            <td>{{ activity["time"] }}</td>
+                            <td>{{ activity["distance"] }} km</td>
+                            <td>{{ activity["height"] }} m</td>
+                            <td><img src="{{ url_for('static', filename=activity['athlete']['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="split-section">
+                <h2>Longest single distance</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Distance</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for athlete in data["longest_single_distance"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{athlete['id']}}"><img src="{{ athlete['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['id']}}">{{ athlete["name"] }}</a></td>
+                            <td>{{ athlete["best_distance"] }} km</td>
+                            <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section split">
+            <div class="split-section">
+                <h2>Fastest 3k</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>3k time</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in data["fastest_3k"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_fastest_3k"] }}</td>
+                            <td>{{ activity["fastest_3k"] }}</td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="split-section">
+                <h2>Fastest 10k</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>10k time</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in data["fastest_10k"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_fastest_10k"] }}</td>
+                            <td>{{ activity["fastest_10k"] }}</td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section split">
+            <div class="split-section">
+                <h2>Single activity elevation gain</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>Gain</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in data["most_single_height"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_elevation_gain"] }}</td>
+                            <td>{{ activity["most_elevation_gain"] }} m</td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section split">
+            <div class="split-section">
+                <h2>Total Distance by Athlete</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Distance</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for athlete in data["longest_distance"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["name"] }}</a></td>
+                            <td>{{ athlete["distance"] }} km</td>
+                            <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="split-section">
+                <h2>Total Elevation by Athlete</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Height</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for athlete in data["most_height"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{athlete['id']}}"><img src="{{ athlete['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['id']}}">{{ athlete["name"] }}</a></td>
+                            <td>{{ athlete["height"] }} m</td>
+                            <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer style="text-align: center; margin-top: 20px;">
+        <p style="font-size: 12px; color: #555;">Crafted with <s>care</s> haste by Nicolai Nome Sommervold</p>
+    </footer>
+    <script type="text/javascript">
+        const updateTimer = () => {
+            let now = new Date();
+            let end = new Date(2025, 5, 2, 0, 0, 0);
+            let time_left = (end - now) / 1000;
+            days = Math.floor(time_left/(24*3600))
+            hours = Math.floor((time_left%(24*3600))/3600)
+            minutes = Math.floor((time_left%3600)/60)
+            seconds = Math.floor(time_left%60)
+            document.getElementById("days").innerHTML = days
+            document.getElementById("hours").innerHTML = hours
+            document.getElementById("minutes").innerHTML = minutes
+            document.getElementById("seconds").innerHTML = seconds
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
