@@ -11,7 +11,7 @@ import warnings
 import bs4
 
 # This is what works:
-UPDATE_FREQUENCY_S = 24 * 60 * 60
+UPDATE_FREQUENCY_S = 30 * 60 # check last 30 minutes
 
 read_time = datetime.datetime.now()
 if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
@@ -319,7 +319,7 @@ org_pictures = {
     "ksat": "ksat.png",
     "orbit": "orbit.png",
 }
-update_leaderboard = False
+update_leaderboard = True
 if update_leaderboard:
     update_data(ksat_banned, KSAT_CLUB_ID, 0, "ksat")
     update_data(ksat_banned, KSAT_CLUB_ID, 1, "ksat")
