@@ -110,6 +110,37 @@
                     </tbody>
                 </table>
             </div>
+            
+        </div>
+
+        <div class="section split">
+            <div class="split-section">
+                <h2>Single activity elevation gain</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>Gain</th>
+                            <th>Team</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in data["most_single_height"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_elevation_gain"] }}</td>
+                            <td>{{ activity["most_elevation_gain"] }} m</td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             <div class="split-section">
                 <h2>Longest single distance</h2>
                 <table>
@@ -136,7 +167,7 @@
                 </table>
             </div>
         </div>
-
+        
         <div class="section split">
             <div class="split-section">
                 <h2>Fastest 3k</h2>
@@ -194,35 +225,6 @@
             </div>
         </div>
 
-        <div class="section split">
-            <div class="split-section">
-                <h2>Single activity elevation gain</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Place</th>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Time</th>
-                            <th>Gain</th>
-                            <th>Team</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for activity in data["most_single_height"] %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
-                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
-                            <td>{{ activity["time_elevation_gain"] }}</td>
-                            <td>{{ activity["most_elevation_gain"] }} m</td>
-                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
         <div class="section split">
             <div class="split-section">
