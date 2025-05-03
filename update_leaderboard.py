@@ -441,7 +441,7 @@ def sort_date(activities: list[Activity]):
     for activity in activities:
         activity["time"] = datetime.datetime.fromisoformat(activity["time"])
     
-    activities = sorted(activities, key=lambda x: x["time"])
+    activities = sorted(activities, key=lambda x: x["time"], reverse=True)
 
     for activity in activities:
         activity["time"] = activity["time"].isoformat()
