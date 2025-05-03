@@ -262,7 +262,7 @@ class Activity(TypedDict):
 KSAT_CLUB_ID = 471480
 ORBIT_CLUB_ID = 1131791
 
-COMPETITION_START = datetime.datetime(2025, 4, 28, 0, 0, 0)
+COMPETITION_START = datetime.datetime(2025, 5, 5, 0, 0, 0)
 COMPETITION_END = datetime.datetime(2025, 6, 1, 0, 0, 0)
 WEEK_LENGTH_SEC = 24*7*3600
 MAX_MARATHON_WINNERS = 10
@@ -606,6 +606,9 @@ ksat["height"] = int(height)
 
 # Calculate progess bar
 longest = ksat_distance if ksat_distance > orbit_distance else orbit_distance
+if longest == 0:
+    longest = 1 # preved zero div
+
 leading_org = "ksat" if ksat_distance > orbit_distance else "orbit"
 
 comp_progress = (read_time - COMPETITION_START).total_seconds() / (COMPETITION_END - COMPETITION_START).total_seconds()
