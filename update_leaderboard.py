@@ -573,8 +573,8 @@ statistics["longest_single_distance"] = round_list(sort_by(totals.values(), "bes
 # statistics["marathon_winner_count"] = len(statistics["marathon_winner"])
 statistics["latest_activity"] = finish_latest_activity(sort_date(old_activities)[:10], totals)
 statistics["most_single_height"] = round_leaderboard_list(sort_by(leaderboard.values(), "most_elevation_gain")[:MAX_SINGLE_HEIGHT_LIST_LENGTH])
-statistics["fastest_3k"] = round_leaderboard_list(sort_by(leaderboard.values(), "fastest_3k", reverse=True)[:MAX_FASTEST_3K_LIST_LENGTH])
-statistics["fastest_10k"] = round_leaderboard_list(sort_by(leaderboard.values(), "fastest_10k", reverse=True)[:MAX_FASTEST_10K_LIST_LENGTH])
+statistics["fastest_3k"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000, sort_by(leaderboard.values(), "fastest_3k", reverse=True)[:MAX_FASTEST_3K_LIST_LENGTH])))
+statistics["fastest_10k"] = round_leaderboard_list(list(filter(lambda x: x["fastest_10k"] != 100000, sort_by(leaderboard.values(), "fastest_10k", reverse=True)[:MAX_FASTEST_10K_LIST_LENGTH])))
 
 
 for week0, week1 in zip(range(-1, week_num), range(0, week_num+1)):
