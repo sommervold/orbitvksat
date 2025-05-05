@@ -10,8 +10,7 @@ import traceback
 import warnings
 import bs4
 
-# This is what works:
-UPDATE_FREQUENCY_S = 30 * 60 # check last 30 minutes
+UPDATE_FREQUENCY_S = 16 * 60 * 60 # check last 16 hours
 
 read_time = datetime.datetime.now()
 if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
@@ -147,6 +146,26 @@ class Strava:
         else:
             return 0
         return elevation_value
+
+    def _create_activity_cache(self):
+        if not os.path.exists("data2/activity_cache.json"):
+            with open("data2/activity_cache.json", "w") as f:
+                json.dump([], f)
+
+    def _has_cached_activity(self, activity_id: int):
+        return activity_id in self._get_cached_activity()
+
+    def _get_cached_activity(self):
+        self._create_activity_cache()
+        with open("data2/activity_cache.json", "r") as f:
+            return json.load(f)
+    
+    def _add_cached_activity(self, activity_id: int):
+        self._create_activity_cache()
+        data = self._get_cached_activity()
+        data.append(activity_id)
+        with open("data2/activity_cache.json", "w") as f:
+            json.dump(data, f)
     
     def get_club_activities(self, club_id: int, activities: list = [], page: int | None = None):
         if page is None:
@@ -176,6 +195,8 @@ class Strava:
                     else:
                         start_time = datetime.datetime.fromisoformat(activity["startDate"])
                     activity_id = activity["id"] if not is_group else activity["entity_id"]
+                    if self._has_cached_activity(activity_id):
+                        continue
                     times, locations, altitude = self.get_activity_info(int(activity_id))
                     elevation_gain = self.get_elevation_gain(activity_id)
                     if is_group:
@@ -205,14 +226,13 @@ class Strava:
                             elevation_gain,
                         )
                     activities.append(activity)
+                    self._add_cached_activity(activity_id)
             except Exception as e:
                 stacktrace = "\n".join(traceback.format_exception(e))
                 warnings.warn(f"Could not parse activity: {str(e)}")
                 log_err(f"Could not parse activity: {str(e)}\n" + stacktrace)
 
         if get_next_page:
-            print("GETTING NEXT PAGE...")
-            quit()
             self.get_club_activities(club_id, activities, activities_json[-1]["cursorData"]["updated_at"])
         return activities
 
