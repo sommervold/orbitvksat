@@ -59,7 +59,7 @@ class StravaActivity:
         for loc in self.latlng_list:
             distance.append(self._point_distance(loc[0], loc[1], prev_loc[0], prev_loc[1]))
             prev_loc = loc
-        
+
         target_distance = n * 1000
         dist = 0
         index_end = -1
@@ -160,6 +160,11 @@ class Strava:
         for activity in activities_json:
             try:
                 is_group = False
+                publish_time = datetime.datetime.fromtimestamp(activity["cursorData"]["updated_at"], tz=datetime.timezone.utc)
+                now = datetime.datetime.now(tz=datetime.timezone.utc)
+                if (now - publish_time).total_seconds() > UPDATE_FREQUENCY_S:
+                    get_next_page = False
+                    continue
                 if activity["entity"] == "Activity":
                     acts = [activity["activity"]]
                 else: # Assume GroupActivity so we get errors in the log
@@ -170,46 +175,44 @@ class Strava:
                         start_time = datetime.datetime.fromisoformat(activity["start_date"])
                     else:
                         start_time = datetime.datetime.fromisoformat(activity["startDate"])
-                    now = datetime.datetime.now(tz=datetime.timezone.utc)
-                    if (now - start_time).total_seconds() > UPDATE_FREQUENCY_S:
-                        get_next_page = False
+                    activity_id = activity["id"] if not is_group else activity["entity_id"]
+                    times, locations, altitude = self.get_activity_info(int(activity_id))
+                    elevation_gain = self.get_elevation_gain(activity_id)
+                    if is_group:
+                        activity = StravaActivity(
+                            int(activity_id),
+                            activity["activity_class_name"],
+                            activity["visibility"],
+                            start_time,
+                            activity["elapsed_time"],
+                            int(activity["athlete_id"]),
+                            times,
+                            locations,
+                            altitude,
+                            elevation_gain,
+                        )
                     else:
-                        activity_id = activity["id"] if not is_group else activity["entity_id"]
-                        times, locations, altitude = self.get_activity_info(int(activity_id))
-                        elevation_gain = self.get_elevation_gain(activity_id)
-                        if is_group:
-                            activity = StravaActivity(
-                                int(activity_id),
-                                activity["activity_class_name"],
-                                activity["visibility"],
-                                start_time,
-                                activity["elapsed_time"],
-                                int(activity["athlete_id"]),
-                                times,
-                                locations,
-                                altitude,
-                                elevation_gain,
-                            )
-                        else:
-                            activity = StravaActivity(
-                                int(activity_id),
-                                activity["type"],
-                                activity["visibility"],
-                                start_time,
-                                activity["elapsedTime"],
-                                int(activity["athlete"]["athleteId"]),
-                                times,
-                                locations,
-                                altitude,
-                                elevation_gain,
-                            )
-                        activities.append(activity)
+                        activity = StravaActivity(
+                            int(activity_id),
+                            activity["type"],
+                            activity["visibility"],
+                            start_time,
+                            activity["elapsedTime"],
+                            int(activity["athlete"]["athleteId"]),
+                            times,
+                            locations,
+                            altitude,
+                            elevation_gain,
+                        )
+                    activities.append(activity)
             except Exception as e:
                 stacktrace = "\n".join(traceback.format_exception(e))
                 warnings.warn(f"Could not parse activity: {str(e)}")
                 log_err(f"Could not parse activity: {str(e)}\n" + stacktrace)
 
         if get_next_page:
+            print("GETTING NEXT PAGE...")
+            quit()
             self.get_club_activities(club_id, activities, activities_json[-1]["cursorData"]["updated_at"])
         return activities
 
