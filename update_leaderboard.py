@@ -341,7 +341,6 @@ ksat_banned = [
     34235219,  # Carl H Jonsson
     23605581,  # Rasmus Nordahl
     25970800, # Truls Pedersen
-    6035673, # Kristian Jenssen
     7585408, # Ola Ørjavik
 ]
 org_pictures = {
