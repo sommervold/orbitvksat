@@ -327,6 +327,9 @@ orbit_banned = [
     92922838,  # Sumeyo Sharif
     117191735,  # Tim Matras
     8804086,  # Ulrik Falk-Petersen
+    120238774, # Miriam Simers Mehus
+    106271302, # Patric Andre Berthelsen
+    136086572, # Mats Kvanvik
 ]
 ksat_banned = [
     47158881,  # Freider Engstrøm Fløan
@@ -337,6 +340,9 @@ ksat_banned = [
     1270026,  # Roy Sorensen
     34235219,  # Carl H Jonsson
     23605581,  # Rasmus Nordahl
+    25970800, # Truls Pedersen
+    6035673, # Kristian Jenssen
+    7585408, # Ola Ørjavik
 ]
 org_pictures = {
     "ksat": "ksat.png",
