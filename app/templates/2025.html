@@ -243,8 +243,8 @@
                         {% for athlete in data["longest_distance"] %}
                         <tr>
                             <td>{{ loop.index }}</td>
-                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}"><img src="{{ athlete['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
-                            <td><a href="https://strava.com/athletes/{{athlete['athlete_id']}}">{{ athlete["name"] }}</a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['id']}}"><img src="{{ athlete['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{athlete['id']}}">{{ athlete["name"] }}</a></td>
                             <td>{{ athlete["distance"] }} km</td>
                             <td><img src="{{ url_for('static', filename=athlete['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
