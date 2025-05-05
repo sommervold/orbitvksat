@@ -134,7 +134,7 @@
                             <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
                             <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
                             <td>{{ activity["time_elevation_gain"] }}</td>
-                            <td>{{ activity["most_elevation_gain"] }} m</td>
+                            <td><a href="https://strava.com/activities/{{activity['most_elevation_gain_activity_id']}}">{{ activity["most_elevation_gain"] }} m</a></td>
                             <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
                         {% endfor %}
@@ -189,7 +189,7 @@
                             <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
                             <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
                             <td>{{ activity["time_fastest_3k"] }}</td>
-                            <td>{{ activity["fastest_3k"] }}</td>
+                            <td><a href="https://strava.com/activities/{{activity['fastest_3k_activity_id']}}">{{ activity["fastest_3k"] }}</a></td>
                             <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
                         {% endfor %}
@@ -216,7 +216,7 @@
                             <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
                             <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
                             <td>{{ activity["time_fastest_10k"] }}</td>
-                            <td>{{ activity["fastest_10k"] }}</td>
+                            <td><a href="https://strava.com/activities/{{activity['fastest_10k_activity_id']}}">{{ activity["fastest_10k"] }}</a></td>
                             <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
                         </tr>
                         {% endfor %}
