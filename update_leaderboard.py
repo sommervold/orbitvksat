@@ -59,7 +59,7 @@ class StravaActivity:
             distance.append(self._point_distance(loc[0], loc[1], prev_loc[0], prev_loc[1]))
             prev_loc = loc
 
-        target_distance = n * 1000
+        target_distance = n * 1000 - 10*n # leave a 1% margin on distance
         dist = 0
         index_end = -1
         while dist < target_distance and (index_end+1) < len(distance):
@@ -194,6 +194,7 @@ class Strava:
                         start_time = datetime.datetime.fromisoformat(activity["start_date"])
                     else:
                         start_time = datetime.datetime.fromisoformat(activity["startDate"])
+                    start_time = publish_time
                     activity_id = activity["id"] if not is_group else activity["entity_id"]
                     if self._has_cached_activity(activity_id):
                         continue
@@ -541,9 +542,9 @@ for activity in latest_strava_activities:
             "fastest_3k_activity_id": None,
             "fastest_10k": 100000,
             "fastest_10_activity_id": None,
-            "time_elevation_gain": datetime.datetime.now().strftime("%d %B %H:%M"),
-            "time_fastest_3k": datetime.datetime.now().strftime("%d %B %H:%M"),
-            "time_fastest_10k": datetime.datetime.now().strftime("%d %B %H:%M"),
+            "time_elevation_gain": activity.start_time.strftime("%d %B %H:%M"),#datetime.datetime.now().strftime("%d %B %H:%M"),
+            "time_fastest_3k": activity.start_time.strftime("%d %B %H:%M"),
+            "time_fastest_10k": activity.start_time.strftime("%d %B %H:%M"),
         }
     athlete = leaderboard[str(athlete_id)]
 
@@ -552,20 +553,20 @@ for activity in latest_strava_activities:
     if elevation_gain > athlete["most_elevation_gain"]:
         athlete["most_elevation_gain"] = elevation_gain
         athlete["most_elevation_gain_activity_id"] = activity.id
-        athlete["time_elevation_gain"] = datetime.datetime.now().strftime("%d %B %H:%M")
+        athlete["time_elevation_gain"] = activity.start_time.strftime("%d %B %H:%M")
     
     # Fastest 3k
     fastest_3k = activity.calculate_fastest_nk(3)
     if fastest_3k is not None and fastest_3k < athlete["fastest_3k"]:
         athlete["fastest_3k"] = fastest_3k
         athlete["fastest_3k_activity_id"] = activity.id
-        athlete["time_fastest_3k"] = datetime.datetime.now().strftime("%d %B %H:%M")
+        athlete["time_fastest_3k"] = activity.start_time.strftime("%d %B %H:%M")
     
     fastest_10k = activity.calculate_fastest_nk(10)
     if fastest_10k is not None and fastest_10k < athlete["fastest_10k"]:
         athlete["fastest_10k"] = fastest_10k
         athlete["fastest_10k_activity_id"] = activity.id
-        athlete["time_fastest_10k"] = datetime.datetime.now().strftime("%d %B %H:%M")
+        athlete["time_fastest_10k"] = activity.start_time.strftime("%d %B %H:%M")
 
 # Save leaderboard
 with open("data2/leaderboard_single_activity.json", "w") as f:
