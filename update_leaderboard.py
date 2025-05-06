@@ -10,7 +10,7 @@ import traceback
 import warnings
 import bs4
 
-UPDATE_FREQUENCY_S = 16 * 60 * 60 # check last 16 hours
+UPDATE_FREQUENCY_S = 24 * 60 * 60 # check last 24 hours
 
 read_time = datetime.datetime.now()
 if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
@@ -153,7 +153,7 @@ class Strava:
                 json.dump([], f)
 
     def _has_cached_activity(self, activity_id: int):
-        return activity_id in self._get_cached_activity()
+        return str(activity_id) in self._get_cached_activity()
 
     def _get_cached_activity(self):
         self._create_activity_cache()
@@ -163,7 +163,7 @@ class Strava:
     def _add_cached_activity(self, activity_id: int):
         self._create_activity_cache()
         data = self._get_cached_activity()
-        data.append(activity_id)
+        data.append(str(activity_id))
         with open("data2/activity_cache.json", "w") as f:
             json.dump(data, f)
     
