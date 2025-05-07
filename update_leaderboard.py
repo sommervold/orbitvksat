@@ -17,8 +17,7 @@ if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
     # seemed like something really weird happened on the week-change,
     # so make sure to not check immediately after a new week has started.
     # 20 mins is probably way too much but better safe.
-    #quit(0)
-    pass
+    quit(0)
 
 os.makedirs("data", exist_ok=True)
 try:
