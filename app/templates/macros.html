@@ -1,0 +1,31 @@
+{% macro table(name, column_names, columns, suffixes, rows) %}
+
+<div class="split-section">
+    <h2>{{name}}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                {% for column in column_names %}
+                    <th>{{column}}</th>
+                {% endfor %}
+                <th>Team</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in rows %}
+            <tr>
+                <td><a href="https://strava.com/athletes/{{item['athlete']['id']}}"><img src="{{ item['athlete']['picture'] }}" alt="Avatar" class="profile-pic"></a></td>
+                <td><a href="https://strava.com/athletes/{{item['athlete']['id']}}">{{ item["athlete"]["name"] }}</a></td>
+                {% for column in columns %}
+                <td>{{item[column]}}{{suffixes[loop.index0]}}</td>
+                {% endfor %}
+                <td><img src="{{ url_for('static', filename=item['athlete']['org_pic']) }}" alt="Org" class="org-pic"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endmacro %}

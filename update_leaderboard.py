@@ -593,10 +593,6 @@ with open(activities_file, "w") as f:
 statistics["longest_distance"] = round_list(sort_by(totals.values(), "distance")[:MAX_DISTANCE_LIST_LENGTH])
 statistics["most_height"] = round_list(sort_by(totals.values(), "height")[:MAX_HEIGHT_LIST_LENGTH])
 statistics["longest_single_distance"] = round_list(sort_by(totals.values(), "best_distance")[:MAX_LONGEST_ACTIVITY_LIST_LENGTH])
-# statistics["marathon_winner"] = list(filter(lambda x: x["org"] == "orbit" and x["distance"] >= MIN_DISTANCE_MARATHON, totals.values()))[:MAX_MARATHON_WINNERS]
-# statistics["cup_winner"] = list(filter(lambda x: x["org"] == "orbit" and x["distance"] >= MIN_DISTANCE_CUP, totals.values()))[:MAX_MARATHON_WINNERS]
-# statistics["cup_winner_count"] = len(statistics["cup_winner"])
-# statistics["marathon_winner_count"] = len(statistics["marathon_winner"])
 statistics["latest_activity"] = finish_latest_activity(sort_date(old_activities)[:10], totals)
 statistics["most_single_height"] = round_leaderboard_list(sort_by(leaderboard.values(), "most_elevation_gain")[:MAX_SINGLE_HEIGHT_LIST_LENGTH])
 statistics["fastest_3k"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000, sort_by(leaderboard.values(), "fastest_3k", reverse=True)[:MAX_FASTEST_3K_LIST_LENGTH])))
