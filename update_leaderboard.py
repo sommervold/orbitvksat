@@ -240,7 +240,8 @@ class Strava:
     def get_activity_info(self, activity_id: int):
         res = requests.get(f"https://www.strava.com/activities/{activity_id}/streams?stream_types[]=time&stream_types[]=latlng&stream_types[]=altitude", headers=self._get_headers(), cookies=self._get_auth())
         if not res.ok:
-            raise StravaError(f"Error when fetching activity: {res.content}")
+            self._add_cached_activity(activity_id)
+            raise StravaError(f"Error when fetching activity: {res.content}. Activity id: {activity_id}")
         location_info = res.json()
         time = location_info["time"] if "time" in location_info else None
         latlng = location_info["latlng"] if "latlng" in location_info else None
