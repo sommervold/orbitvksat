@@ -20,6 +20,7 @@ if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
     #quit(0)
     pass
 
+os.makedirs("data", exist_ok=True)
 try:
     with open("token.txt") as f:
         token = f.read().strip()
@@ -148,8 +149,8 @@ class Strava:
         return elevation_value
 
     def _create_activity_cache(self):
-        if not os.path.exists("data2/activity_cache.json"):
-            with open("data2/activity_cache.json", "w") as f:
+        if not os.path.exists("data/activity_cache.json"):
+            with open("data/activity_cache.json", "w") as f:
                 json.dump([], f)
 
     def _has_cached_activity(self, activity_id: int):
@@ -157,14 +158,14 @@ class Strava:
 
     def _get_cached_activity(self):
         self._create_activity_cache()
-        with open("data2/activity_cache.json", "r") as f:
+        with open("data/activity_cache.json", "r") as f:
             return json.load(f)
     
     def _add_cached_activity(self, activity_id: int):
         self._create_activity_cache()
         data = self._get_cached_activity()
         data.append(str(activity_id))
-        with open("data2/activity_cache.json", "w") as f:
+        with open("data/activity_cache.json", "w") as f:
             json.dump(data, f)
     
     def get_club_activities(self, club_id: int, activities: list = [], page: int | None = None):
@@ -315,7 +316,7 @@ def update_data(banned_athletes: list[int], club_id: int, week_offset: int, org:
     # week_offset = 0 if week_offset else 1
     data = remove_banned_athletes(banned_athletes, data)
     add_org(data, org)
-    save_data(f"data2/{org}", data, week_num - week_offset)
+    save_data(f"data/{org}", data, week_num - week_offset)
 
 
 orbit_banned = [
@@ -451,7 +452,7 @@ def calculate_new_activities(totals: dict[int, Athlete], old_totals: dict[int, A
     return activities
 
 def swap_totals(totals: dict[int, Athlete]):
-    totals_file = "data2/totals.json"
+    totals_file = "data/totals.json"
     if not os.path.exists(totals_file):
         with open(totals_file, "w") as f:
             f.write("{}")
@@ -500,10 +501,10 @@ statistics = {"orbit": {}, "ksat": {}}
 orbit = statistics["orbit"]
 ksat = statistics["ksat"]
 
-with open("data2/orbit.json") as f:
+with open("data/orbit.json") as f:
     data_orbit = json.load(f)
 
-with open("data2/ksat.json") as f:
+with open("data/ksat.json") as f:
     data_ksat = json.load(f)
 
 totals = {}
@@ -513,11 +514,11 @@ for week in weeks:
     get_athlete_totals(totals, data_ksat[str(week)])
 
 # Calculate fastest 3k, 10k, most elevation in single activity
-if not os.path.exists("data2/leaderboard_single_activity.json"):
-    with open("data2/leaderboard_single_activity.json", "w") as f:
+if not os.path.exists("data/leaderboard_single_activity.json"):
+    with open("data/leaderboard_single_activity.json", "w") as f:
         json.dump({}, f)
 
-with open("data2/leaderboard_single_activity.json", "r") as f:
+with open("data/leaderboard_single_activity.json", "r") as f:
     leaderboard = json.load(f)
 
 latest_strava_activities = strava.get_club_activities(KSAT_CLUB_ID)
@@ -569,7 +570,7 @@ for activity in latest_strava_activities:
         athlete["time_fastest_10k"] = activity.start_time.strftime("%d %B %H:%M")
 
 # Save leaderboard
-with open("data2/leaderboard_single_activity.json", "w") as f:
+with open("data/leaderboard_single_activity.json", "w") as f:
     json.dump(leaderboard, f, indent=2)
 
 
@@ -577,7 +578,7 @@ with open("data2/leaderboard_single_activity.json", "w") as f:
 old_totals = swap_totals(totals)
 activities = calculate_new_activities(totals, old_totals)
 
-activities_file = "data2/activities.json"
+activities_file = "data/activities.json"
 if not os.path.exists(activities_file):
     with open(activities_file, "w") as f:
         f.write("[]")
@@ -646,5 +647,5 @@ orbit["progress"] = (orbit_distance / longest) * comp_progress * 100
 
 statistics["weeks"] = [str(x) for x in range(0, week_num + 1)]
 
-with open("data2/stats.json", "w") as f:
+with open("data/stats.json", "w") as f:
     json.dump(statistics, f, indent=2)

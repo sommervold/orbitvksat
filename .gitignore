@@ -163,3 +163,4 @@ cython_debug/
 data/
 token.txt
 config.toml
+error_log

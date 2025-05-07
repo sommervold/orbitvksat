@@ -1,6 +1,8 @@
-this was first intended to be a small personal website for tracking the competition but that got out of hand quickly
-possibly the worst code i've written in a few years, but i guess it works.
-run a.py to fetch data from strava, you might need to manually create some files first. good luck on figuring out how.
-also copy _strava4_token cookie from strava into token.txt if you want profile pics and full names to be fetched.
+This page is a quick and dirty webpage for showing statistics for the 2025 Orbit VS KSAT running competition.
 
-run the flask on the app folder to start the website.
+The script "update_leaderboard.py" fetches data from the two clubs, and generates top-lists in various categories.
+
+It is currently hosted on https://strava.orbitntnu.com/, and is updated every 10 minutes.
+
+To run the script yourself, you need to create a file called "token.txt", and insert the _strava4_token cookie from strava's webpage.
+It runs on scraping instead of the API because the API lacks essential information without athlete consent, making the project unfeasable.
