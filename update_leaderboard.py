@@ -51,7 +51,7 @@ class StravaActivity:
 
     def calculate_fastest_nk(self, n):
         # Convert to list of distance traveled
-        if self.elapsed_time_list == None or self.latlng_list == None:
+        if self.elapsed_time_list == None or self.latlng_list == None or len(self.latlng_list) == 0:
             return float("inf")
         distance = []
         prev_loc = self.latlng_list[0]
