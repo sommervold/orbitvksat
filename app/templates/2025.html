@@ -88,8 +88,9 @@
             <div class="split-section">
                 <h2 style="margin-bottom: 0px;">Most elevation gain in single activity</h2>
                 <p style="color: grey; margin: 0 0 20px 10px;">
-                    <small>To qualify, your activity must be public on strava.<br/>
-                    Treadmill activities do not count</small>
+                    <small>To qualify, your activity must be public on strava. <br>
+                        You may make it private again after registration here (~10 mins)
+                    </small>
                 </p>
                 <table>
                     <thead>
@@ -118,6 +119,11 @@
             </div>
             <div class="split-section">
                 <h2>Longest single distance</h2>
+                <p style="color: grey; margin: 0 0 20px 10px;">
+                    <small>Your activity does <strong>not</strong> have to be public.<br>
+                        
+                    </small>
+                </p>
                 <table>
                     <thead>
                         <tr>
@@ -148,9 +154,19 @@
                 <h2 style="margin-bottom: 0;">Fastest 3k</h2>
                 <p style="color: grey; margin: 0 0 20px 10px;">
                     <small>To qualify, your activity must be public on strava.<br/>
-                    Treadmill activities do not count</small>
+                    You may make it private again after registration here (~10 mins)<br/>
+                    Treadmill activities do not count. <br>
+                    Prizes for both male and female classes
+                </small>
                 </p>
-                <table>
+                <div>
+                    <form onchange="updateTable('fastest_3k')" id="fastest_3k_sort">
+                        <label><input type="radio" name="gender" value="A" checked> All</label>
+                        <label><input type="radio" name="gender" value="F"> Female</label>
+                        <label><input type="radio" name="gender" value="M"> Male</label>
+                    </form>
+                </div>
+                <table id="fastest_3k_table">
                     <thead>
                         <tr>
                             <th>Place</th>
@@ -161,7 +177,7 @@
                             <th>Team</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody version="A">
                         {% for activity in data["fastest_3k"] %}
                         <tr>
                             <td>{{ loop.index }}</td>
@@ -170,6 +186,33 @@
                             <td>{{ activity["time_fastest_3k"] }}</td>
                             <td><a href="https://strava.com/activities/{{activity['fastest_3k_activity_id']}}">{{ activity["fastest_3k"] }}</a></td>
                             <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                            <span style="display: none;" gender="{{activity['gender']}}"></span>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tbody version="F" hidden>
+                        {% for activity in data["fastest_3k_female"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_fastest_3k"] }}</td>
+                            <td><a href="https://strava.com/activities/{{activity['fastest_3k_activity_id']}}">{{ activity["fastest_3k"] }}</a></td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                            <span style="display: none;" gender="{{activity['gender']}}"></span>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tbody version="M" hidden>
+                        {% for activity in data["fastest_3k_male"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_fastest_3k"] }}</td>
+                            <td><a href="https://strava.com/activities/{{activity['fastest_3k_activity_id']}}">{{ activity["fastest_3k"] }}</a></td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                            <span style="display: none;" gender="{{activity['gender']}}"></span>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -179,11 +222,20 @@
                 <h2 style="margin-bottom: 0px;">Fastest 10k</h2>
                 <p style="color: grey; margin: 0 0 20px 10px;">
                     <small>To qualify, your activity must be public on strava.<br/>
-                    Treadmill activities do not count</small>
+                    You may make it private again after registration here (~10 mins)<br/>
+                    Treadmill activities do not count. <br>
+                    Prizes for both male and female classes
+                </small>
                 </p>
                     
-
-                <table>
+                <div>
+                    <form onchange="updateTable('fastest_10k')" id="fastest_10k_sort">
+                        <label><input type="radio" name="gender" value="A" checked> All</label>
+                        <label><input type="radio" name="gender" value="F"> Female</label>
+                        <label><input type="radio" name="gender" value="M"> Male</label>
+                    </form>
+                </div>
+                <table id="fastest_10k_table">
                     <thead>
                         <tr>
                             <th>Place</th>
@@ -194,8 +246,32 @@
                             <th>Team</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody version="A">
                         {% for activity in data["fastest_10k"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_fastest_10k"] }}</td>
+                            <td><a href="https://strava.com/activities/{{activity['fastest_10k_activity_id']}}">{{ activity["fastest_10k"] }}</a></td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tbody version="M" hidden>
+                        {% for activity in data["fastest_10k_male"] %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
+                            <td><a href="https://strava.com/athletes/{{activity['id']}}">{{ activity["name"] }}</a></td>
+                            <td>{{ activity["time_fastest_10k"] }}</td>
+                            <td><a href="https://strava.com/activities/{{activity['fastest_10k_activity_id']}}">{{ activity["fastest_10k"] }}</a></td>
+                            <td><img src="{{ url_for('static', filename=activity['org_pic']) }}" alt="Org" class="org-pic"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tbody version="F" hidden>
+                        {% for activity in data["fastest_10k_female"] %}
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td><a href="https://strava.com/athletes/{{activity['id']}}"><img src="{{ activity['picture'] }}" alt="Profile Picture" class="profile-pic"></a></td>
@@ -266,7 +342,7 @@
         </div>
     </div>
     <footer style="text-align: center; margin-top: 20px;">
-        <p style="font-size: 12px; color: #555;">Contact Nicolai Nome Sommervold if you experience any issues</p>
+        <p style="font-size: 12px; color: #555;">Contact Nicolai Nome Sommervold (on teams for KSAT, slack for Orbit) if you experience any issues</p>
     </footer>
     <script type="text/javascript">
         const updateTimer = () => {
@@ -285,6 +361,20 @@
 
         updateTimer();
         setInterval(updateTimer, 1000);
+
+        const updateTable = (tableName) => {
+            table = document.getElementById(tableName + "_table");
+            input = document.getElementById(tableName + "_sort");
+            const gender = document.querySelector("#" + tableName + "_sort input[name=\"gender\"]:checked");
+            document.querySelector("#" + tableName + "_table tbody[version=A]").hidden = true;
+            document.querySelector("#" + tableName + "_table tbody[version=M]").hidden = true;
+            document.querySelector("#" + tableName + "_table tbody[version=F]").hidden = true;
+            document.querySelector("#" + tableName + "_table tbody[version=" + gender.value + "]").hidden = false;
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            updateTable("fastest_10k");
+            updateTable("fastest_3k");
+        });
     </script>
 </body>
 </html>

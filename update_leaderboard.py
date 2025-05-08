@@ -10,7 +10,7 @@ import traceback
 import warnings
 import bs4
 
-UPDATE_FREQUENCY_S = 24 * 60 * 60 # check last 24 hours
+UPDATE_FREQUENCY_S = 94 * 60 * 60 # check last 24 hours
 
 read_time = datetime.datetime.now()
 if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
@@ -45,6 +45,7 @@ class StravaActivity:
     latlng_list: list[int]
     altitude: list[float]
     elevation_gain: int
+    gender: str
 
     def get_elevation(self):
         return self.elevation_gain
@@ -212,6 +213,7 @@ class Strava:
                             locations,
                             altitude,
                             elevation_gain,
+                            activity["athlete"]["sex"],
                         )
                     else:
                         activity = StravaActivity(
@@ -225,6 +227,7 @@ class Strava:
                             locations,
                             altitude,
                             elevation_gain,
+                            activity["athlete"]["sex"],
                         )
                     activities.append(activity)
                     self._add_cached_activity(activity_id)
@@ -546,8 +549,10 @@ for activity in latest_strava_activities:
             "time_elevation_gain": activity.start_time.strftime("%d %B %H:%M"),#datetime.datetime.now().strftime("%d %B %H:%M"),
             "time_fastest_3k": activity.start_time.strftime("%d %B %H:%M"),
             "time_fastest_10k": activity.start_time.strftime("%d %B %H:%M"),
+            "gender": activity.gender,
         }
     athlete = leaderboard[str(athlete_id)]
+    leaderboard[str(athlete_id)]["gender"] = activity.gender
 
     # Elevation
     elevation_gain = activity.get_elevation()
@@ -598,7 +603,10 @@ statistics["latest_activity"] = finish_latest_activity(sort_date(old_activities)
 statistics["most_single_height"] = round_leaderboard_list(sort_by(leaderboard.values(), "most_elevation_gain")[:MAX_SINGLE_HEIGHT_LIST_LENGTH])
 statistics["fastest_3k"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000, sort_by(leaderboard.values(), "fastest_3k", reverse=True)[:MAX_FASTEST_3K_LIST_LENGTH])))
 statistics["fastest_10k"] = round_leaderboard_list(list(filter(lambda x: x["fastest_10k"] != 100000, sort_by(leaderboard.values(), "fastest_10k", reverse=True)[:MAX_FASTEST_10K_LIST_LENGTH])))
-
+statistics["fastest_3k_female"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000 and x["gender"] == "F", sort_by(leaderboard.values(), "fastest_3k", reverse=True)[:MAX_FASTEST_3K_LIST_LENGTH])))
+statistics["fastest_3k_male"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000 and x["gender"] == "M", sort_by(leaderboard.values(), "fastest_3k", reverse=True)[:MAX_FASTEST_3K_LIST_LENGTH])))
+statistics["fastest_10k_male"] = round_leaderboard_list(list(filter(lambda x: x["fastest_10k"] != 100000 and x["gender"] == "M", sort_by(leaderboard.values(), "fastest_10k", reverse=True)[:MAX_FASTEST_10K_LIST_LENGTH])))
+statistics["fastest_10k_female"] = round_leaderboard_list(list(filter(lambda x: x["fastest_10k"] != 100000 and x["gender"] == "F", sort_by(leaderboard.values(), "fastest_10k", reverse=True)[:MAX_FASTEST_10K_LIST_LENGTH])))
 
 for week0, week1 in zip(range(-1, week_num), range(0, week_num+1)):
     ksat[week1] = {"distance": {}, "height": {}}
