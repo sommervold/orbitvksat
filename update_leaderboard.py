@@ -237,7 +237,8 @@ class Strava:
                 log_err(f"Could not parse activity: {str(e)}\n" + stacktrace)
 
         if get_next_page:
-            self.get_club_activities(club_id, activities, activities_json[-1]["cursorData"]["updated_at"])
+            if len(activities_json) >= 1:
+                self.get_club_activities(club_id, activities, activities_json[-1]["cursorData"]["updated_at"])
         return activities
 
     def get_activity_info(self, activity_id: int):
