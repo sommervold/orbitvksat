@@ -10,7 +10,7 @@ import traceback
 import warnings
 import bs4
 
-UPDATE_FREQUENCY_S = 94 * 60 * 60 # check last 24 hours
+UPDATE_FREQUENCY_S = 24 * 60 * 60 # check last 24 hours
 
 read_time = datetime.datetime.now()
 if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
@@ -66,7 +66,7 @@ class StravaActivity:
         while dist < target_distance and (index_end+1) < len(distance):
             index_end += 1
             dist += distance[index_end]
-    
+
         if (dist < target_distance):
             return None
 
@@ -422,7 +422,7 @@ def create_week_string(week: int, distance: float, height: float, improvement_di
     percent_height = round(100 * (improvement_height - 1), 1)
     height = int(height)
     distance = round(distance / 1000, 1)
-    return f"Week {week}: {distance}km ({percent_distance}%), {height}m ({percent_height}%)"
+    return f"Week {week}: {distance}km ({percent_distance:+}%), {height}m ({percent_height:+}%)"
 
 def get_stats_total(totals: list[Athlete], org: str):
     height = 0
