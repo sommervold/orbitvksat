@@ -191,6 +191,9 @@ class Strava:
                     acts = activity["rowData"]["activities"]
                     is_group = True
                 for activity in acts:
+                    activity_type = activity["type"]
+                    if not "run" in activity_type.lower():
+                        continue # Wrong activity type
                     if is_group:
                         start_time = datetime.datetime.fromisoformat(activity["start_date"])
                     else:
