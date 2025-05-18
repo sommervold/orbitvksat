@@ -390,32 +390,39 @@ def finish_latest_activity(activities: list[Activity], athletes: dict[int, Athle
         activity["time"] = datetime.datetime.fromisoformat(activity["time"]).strftime("%d %B %H:%M")
     return activities
 
+def process_athlete(x, totals):
+    athlete_id = x["athlete_id"]
+    if athlete_id not in totals:
+        totals[athlete_id] = {
+            "distance": 0,
+            "height": 0,
+            "name": f'{x["athlete_firstname"]} {x["athlete_lastname"]}',
+            "org": x["org"],
+            "id": athlete_id,
+            "best_distance": x["best_activities_distance"],
+            "best_distance_activity_id": x["best_activities_distance_activity_id"],
+            "picture": x["athlete_picture_url"],
+            "org_pic": org_pictures[x["org"]],
+        }
+    athlete = totals[athlete_id]
+
+    athlete["distance"] += x["distance"]
+    athlete["height"] += x["elev_gain"]
+
+    new_bd = x["best_activities_distance"] # bd = best distance
+    old_bd = athlete["best_distance"]
+    if new_bd > old_bd:
+        athlete["best_distance"] = new_bd
+        athlete["best_distance_activity_id"] = x["best_activities_distance_activity_id"]
+
 def get_athlete_totals(totals: dict[int, Athlete], data: list):
     for x in data:
-        athlete_id = x["athlete_id"]
-        if athlete_id not in totals:
-            totals[athlete_id] = {
-                "distance": 0,
-                "height": 0,
-                "name": f'{x["athlete_firstname"]} {x["athlete_lastname"]}',
-                "org": x["org"],
-                "id": athlete_id,
-                "best_distance": x["best_activities_distance"],
-                "best_distance_activity_id": x["best_activities_distance_activity_id"],
-                "picture": x["athlete_picture_url"],
-                "org_pic": org_pictures[x["org"]],
-            }
-        athlete = totals[athlete_id]
-
-        athlete["distance"] += x["distance"]
-        athlete["height"] += x["elev_gain"]
-
-        new_bd = x["best_activities_distance"] # bd = best distance
-        old_bd = athlete["best_distance"]
-        if new_bd > old_bd:
-            athlete["best_distance"] = new_bd
-            athlete["best_distance_activity_id"] = x["best_activities_distance_activity_id"]
-
+        try:
+            process_athlete(x, totals)
+        except Exception as e:
+            err = f"Could not process athlete: {x}. Error: {e!s}"
+            log_err(err)
+            warnings.warn(err)
 def sort_by(totals: list[Athlete], field: str, reverse=False):
     longest_runs = sorted(totals, key=lambda x: x[field], reverse=not reverse)
     return longest_runs
