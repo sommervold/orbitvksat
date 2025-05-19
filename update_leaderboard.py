@@ -605,7 +605,7 @@ with open(activities_file, "r") as f:
 old_activities += activities
 
 with open(activities_file, "w") as f:
-    json.dump(old_activities, f)
+    json.dump(old_activities, f, indent=2)
 
 statistics["longest_distance"] = round_list(sort_by(totals.values(), "distance")[:MAX_DISTANCE_LIST_LENGTH])
 statistics["most_height"] = round_list(sort_by(totals.values(), "height")[:MAX_HEIGHT_LIST_LENGTH])
