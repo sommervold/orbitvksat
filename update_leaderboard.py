@@ -177,6 +177,24 @@ class Strava:
         res = requests.get(f"https://strava.com/clubs/{club_id}/feed", params=params, headers=self._get_headers(), cookies=self._get_auth())
         activities_json = res.json()["entries"]
         get_next_page = True
+
+        # KSAT_CLUB_ID = 471480
+        # ORBIT_CLUB_ID = 1131791
+        if club_id == 471480:
+            manual_addition = {
+                "entity": "Activity",
+                "cursorData": {"updated_at": datetime.datetime(2025, 5, 13, 12, 0, 0).timestamp()},
+                "activity": {
+                    "startDate": "2025-05-13T12:00:00Z",
+                    "id": "",
+                    "type": "Run",
+                    "visibility": "everyone",
+                    "elapsedTime": 0, # unused?
+                    "athlete": {"sex": "M", "athleteId": 0},
+                }
+            }
+            #activities_json.insert(0, manual_addition)
+
         for activity in activities_json:
             try:
                 is_group = False
