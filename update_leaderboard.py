@@ -465,12 +465,13 @@ def sort_by(totals: list[Athlete], field: str, reverse=False):
     return longest_runs
 
 
-def create_week_string(week: int, distance: float, height: float, improvement_distance: float,
-                       improvement_height: float):
-    percent_distance = round(100 * (improvement_distance - 1), 1)
-    percent_height = round(100 * (improvement_height - 1), 1)
+def create_week_string(week: int, distance: float, height: float, improvement_distance, improvement_height):
     height = int(height)
     distance = round(distance / 1000, 1)
+    if improvement_distance is None or improvement_height is None:
+        return f"Week {week}: {distance}km, {height}m"
+    percent_distance = round(100 * (improvement_distance - 1), 1)
+    percent_height = round(100 * (improvement_height - 1), 1)
     return f"Week {week}: {distance}km ({percent_distance:+}%), {height}m ({percent_height:+}%)"
 
 
@@ -704,15 +705,14 @@ for week0, week1 in zip(range(-1, week_num), range(0, week_num + 1)):
         continue
     height1, distance1 = _week_stats(data_ksat, w1_key)
     height0, distance0 = _week_stats(data_ksat, w0_key)
-    # avoid division by zero when the previous week is missing or empty
-    safe_distance0 = distance0 if distance0 else 1
-    safe_height0 = height0 if height0 else 1
-    ksat[week1]["distance"]["improvement"] = distance1 / safe_distance0
-    ksat[week1]["height"]["improvement"] = height1 / safe_height0
+    has_baseline = (w0_key in data_ksat) and distance0 > 0 and height0 > 0
+    imp_d = distance1 / distance0 if has_baseline else None
+    imp_h = height1 / height0 if has_baseline else None
+    ksat[week1]["distance"]["improvement"] = imp_d if imp_d is not None else 1
+    ksat[week1]["height"]["improvement"] = imp_h if imp_h is not None else 1
     ksat[week1]["distance"]["total"] = round(distance1 / 1000, 1)
     ksat[week1]["height"]["total"] = int(height1)
-    ksat[week1]["week_string"] = create_week_string(week1, distance1, height1, distance1 / safe_distance0,
-                                                    height1 / safe_height0)
+    ksat[week1]["week_string"] = create_week_string(week1, distance1, height1, imp_d, imp_h)
     ksat["distance_week"] = round(distance1 / 1000, 1)
     ksat["height_week"] = int(height1)
 
@@ -722,14 +722,14 @@ for week0, week1 in zip(range(-1, week_num), range(0, week_num + 1)):
         continue
     height1, distance1 = _week_stats(data_orbit, w1_key)
     height0, distance0 = _week_stats(data_orbit, w0_key)
-    safe_distance0 = distance0 if distance0 else 1
-    safe_height0 = height0 if height0 else 1
-    orbit[week1]["distance"]["improvement"] = distance1 / safe_distance0
-    orbit[week1]["height"]["improvement"] = height1 / safe_height0
+    has_baseline = (w0_key in data_orbit) and distance0 > 0 and height0 > 0
+    imp_d = distance1 / distance0 if has_baseline else None
+    imp_h = height1 / height0 if has_baseline else None
+    orbit[week1]["distance"]["improvement"] = imp_d if imp_d is not None else 1
+    orbit[week1]["height"]["improvement"] = imp_h if imp_h is not None else 1
     orbit[week1]["distance"]["total"] = round(distance1 / 1000, 1)
     orbit[week1]["height"]["total"] = int(height1)
-    orbit[week1]["week_string"] = create_week_string(week1, distance1, height1, distance1 / safe_distance0,
-                                                     height1 / safe_height0)
+    orbit[week1]["week_string"] = create_week_string(week1, distance1, height1, imp_d, imp_h)
     orbit["distance_week"] = round(distance1 / 1000, 1)
     orbit["height_week"] = int(height1)
 
@@ -748,6 +748,7 @@ if longest == 0:
 leading_org = "ksat" if ksat_distance > orbit_distance else "orbit"
 
 comp_progress = (read_time - COMPETITION_START).total_seconds() / (COMPETITION_END - COMPETITION_START).total_seconds()
+comp_progress = max(0.0, min(1.0, comp_progress))
 ksat["progress"] = (ksat_distance / longest) * comp_progress * 100
 orbit["progress"] = (orbit_distance / longest) * comp_progress * 100
 
