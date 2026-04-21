@@ -312,8 +312,8 @@ class Activity(TypedDict):
 KSAT_CLUB_ID = 471480
 ORBIT_CLUB_ID = 1131791
 
-COMPETITION_START = datetime.datetime(2025, 5, 5, 0, 0, 0)
-COMPETITION_END = datetime.datetime(2025, 6, 1, 0, 0, 0)
+COMPETITION_START = datetime.datetime(2026, 5, 4, 0, 0, 0)
+COMPETITION_END = datetime.datetime(2026, 6, 1, 0, 0, 0)
 WEEK_LENGTH_SEC = 24*7*3600
 MAX_MARATHON_WINNERS = 10
 MAX_CUP_WINNERS = 40
