@@ -311,8 +311,6 @@ tbody tr:first-child {
 .profile-pic {
     width: 34px;
     height: 34px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border-strong);
     object-fit: cover;
     display: block;
 }
