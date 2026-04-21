@@ -15,7 +15,7 @@
             <div class="split">
                 <div class="data" style="display: flex; justify-content: center;">
                     <div style="position: relative;">
-                        <img src="/static/ksat.png" style="width: auto; height: 100px; position: absolute; left: 50%; right: 50%; transform: translate(-50%, -25%);">
+                        <img src="/static/ksat.webp" style="width: auto; height: 100px; position: absolute; left: 50%; right: 50%; transform: translate(-50%, -25%);">
                         <p class="infotext" style="margin-top: 100px;">Total distance: {{ data["ksat"]["distance"] }} km</p>
                         <p class="infotext">Vertical distance: {{ data["ksat"]["height"] }} m</p>
                         <p class="infotext">This week: {{ data["ksat"]["distance_week"] }} km</p>
@@ -69,7 +69,7 @@
                     <img src="/static/checkered_flag.png" style="width: 54px; height: 150px; position: absolute; z-index: 0; margin-left: 80%;">
                     <div class="progress ksat" style="width: {{ data['ksat']['progress'] }}%;"></div>
                     
-                    <img src="/static/ksat.png" style="width: 108px; height: auto; z-index: 1; position: relative;">
+                    <img src="/static/ksat.webp" style="width: 108px; height: auto; z-index: 1; position: relative;">
                     <span class="bar-distance">{{ data['ksat']['distance'] }}<span>km</span></span>
                     <br>
                     <div class="progress orbit" style="width: {{ data['orbit']['progress'] }}%;"></div>
