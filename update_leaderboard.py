@@ -416,12 +416,16 @@ def round_list(totals: list[Athlete]):
 
 def finish_latest_activity(activities: list[Activity], athletes: dict[int, Athlete]):
     activities = copy.deepcopy(activities)
+    result = []
     for activity in activities:
+        if activity["athlete_id"] not in athletes:
+            continue
         activity["distance"] = round(activity["distance"] / 1000, 1)
         activity["height"] = int(activity["height"])
         activity["athlete"] = athletes[activity["athlete_id"]]
-        activity["time"] = datetime.datetime.fromisoformat(activity["time"]).strftime("%d %B %H:%M")
-    return activities
+        activity["time"] = datetime.datetime.fromisoformat(activity["time"]).strftime("%d %B")
+        result.append(activity)
+    return result
 
 
 def process_athlete(x, totals):
