@@ -383,7 +383,7 @@ ksat_banned = [
     7585408,  # Ola Ørjavik
 ]
 org_pictures = {
-    "ksat": "ksat.png",
+    "ksat": "ksat.webp",
     "orbit": "orbit.png",
 }
 update_leaderboard = True
