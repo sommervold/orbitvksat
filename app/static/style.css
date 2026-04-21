@@ -343,6 +343,7 @@ table a:hover {
     color: var(--accent-hover);
 }
 
+
 form {
     display: flex;
     gap: 8px;
@@ -353,8 +354,7 @@ form {
 form label {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
+    padding: 6px 16px;
     background: var(--bg-card-elevated);
     border: 1px solid var(--border-subtle);
     border-radius: 999px;
@@ -362,6 +362,7 @@ form label {
     color: var(--text-muted);
     cursor: pointer;
     transition: all 0.15s ease;
+    user-select: none;
 }
 
 form label:hover {
@@ -370,17 +371,17 @@ form label:hover {
 }
 
 form input[type="radio"] {
-    accent-color: var(--accent);
-    cursor: pointer;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
-form input[type="radio"]:checked + span,
+
 form label:has(input[type="radio"]:checked) {
     color: var(--color-charcoal);
     background: var(--accent);
     border-color: var(--accent);
 }
-
 small,
 p small {
     color: var(--text-muted) !important;
