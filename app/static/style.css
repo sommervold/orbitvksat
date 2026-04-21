@@ -122,13 +122,6 @@ h3 {
     flex: 1 1 280px;
     margin-right: 0;
     padding: 80px 16px 24px;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.02) 0%,
-        rgba(255, 255, 255, 0) 100%
-    );
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
 }
 
 .data p {
@@ -305,12 +298,43 @@ tbody tr:first-child td:first-child {
 }
 
 tbody tr:first-child {
+    background: linear-gradient(
+        90deg,
+        rgba(46, 204, 113, 0.25),
+        rgba(46, 204, 113, 0)
+    );
+    box-shadow: inset 3px 0 0 var(--color-emerald-fizz);
+}
 
+tbody tr:nth-child(2) {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 244, 79, 0.22),
+        rgba(255, 244, 79, 0)
+    );
+    box-shadow: inset 3px 0 0 var(--color-laser-lemon);
+}
+
+tbody tr:nth-child(3) {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 79, 129, 0.22),
+        rgba(255, 79, 129, 0)
+    );
+    box-shadow: inset 3px 0 0 var(--color-pink-blast);
+}
+
+tbody tr:first-child:hover,
+tbody tr:nth-child(2):hover,
+tbody tr:nth-child(3):hover {
+    filter: brightness(1.15);
 }
 
 .profile-pic {
     width: 34px;
     height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
     object-fit: cover;
     display: block;
 }

@@ -10,7 +10,7 @@ import traceback
 import warnings
 import bs4
 
-UPDATE_FREQUENCY_S = 24 * 60 * 60 # check last 24 hours
+UPDATE_FREQUENCY_S = 24 * 60 * 60  # check last 24 hours
 
 read_time = datetime.datetime.now()
 if read_time.weekday() == 0 and read_time.hour == 0 and read_time.minute < 20:
@@ -26,12 +26,15 @@ try:
 except FileNotFoundError:
     token = ""
 
+
 class StravaError(Exception): ...
+
 
 def log_err(message: str):
     time = datetime.datetime.now().isoformat() + ": "
     with open("error_log", "a") as f:
         f.write(time + message + "\n")
+
 
 @dataclass
 class StravaActivity:
@@ -60,10 +63,10 @@ class StravaActivity:
             distance.append(self._point_distance(loc[0], loc[1], prev_loc[0], prev_loc[1]))
             prev_loc = loc
 
-        target_distance = n * 1000 - 10*n # leave a 1% margin on distance
+        target_distance = n * 1000 - 10 * n  # leave a 1% margin on distance
         dist = 0
         index_end = -1
-        while dist < target_distance and (index_end+1) < len(distance):
+        while dist < target_distance and (index_end + 1) < len(distance):
             index_end += 1
             dist += distance[index_end]
 
@@ -71,16 +74,16 @@ class StravaActivity:
             return None
 
         elapsed_time = self.elapsed_time_list[index_end] - self.elapsed_time_list[0]
-        fastest_time = n*1000/(dist/elapsed_time) # distance / avg speed
+        fastest_time = n * 1000 / (dist / elapsed_time)  # distance / avg speed
         for index_start, point in enumerate(distance):
             dist -= point
-            while dist < target_distance and (index_end+1) < len(distance):
+            while dist < target_distance and (index_end + 1) < len(distance):
                 index_end += 1
                 dist += distance[index_end]
             if dist < target_distance:
-                break # Not enough activity left
+                break  # Not enough activity left
             elapsed_time = self.elapsed_time_list[index_end] - self.elapsed_time_list[index_start]
-            nk_time = n*1000/(dist/elapsed_time) # distance / avg speed
+            nk_time = n * 1000 / (dist / elapsed_time)  # distance / avg speed
             if nk_time < fastest_time:
                 fastest_time = nk_time
         return fastest_time
@@ -91,28 +94,26 @@ class StravaActivity:
         phi2 = math.radians(lat2)
         lambda1 = math.radians(lon1)
         lambda2 = math.radians(lon2)
-        
+
         delta_phi = phi2 - phi1
         delta_lambda = lambda2 - lambda1
         some_char = (phi1 + phi2) / 2
-        
+
         x = delta_lambda * math.cos(some_char)
         y = delta_phi
         return earth_radius * math.sqrt(x * x + y * y)
 
 
-
-
 class Strava:
     def __init__(self, token: str):
         self._token = token
-    
+
     def _get_headers(self):
         return {
             "Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript",
             "X-Requested-With": "XMLHttpRequest",
             "Host": "www.strava.com",
-            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0" 
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0"
         }
 
     def _get_auth(self):
@@ -125,7 +126,8 @@ class Strava:
             "week_offset": week_offset,
         }
         cookies = self._get_auth()
-        res = requests.get(f"https://strava.com/clubs/{club}/leaderboard", params=params, headers=self._get_headers(), cookies=cookies)
+        res = requests.get(f"https://strava.com/clubs/{club}/leaderboard", params=params, headers=self._get_headers(),
+                           cookies=cookies)
 
         if res.ok:
             pass
@@ -134,10 +136,11 @@ class Strava:
 
         data = res.json()["data"]
         return data
-    
+
     def get_elevation_gain(self, activity_id):
-        res = requests.get(f"https://strava.com/activities/{activity_id}", headers=self._get_headers(), cookies=self._get_auth())
-        
+        res = requests.get(f"https://strava.com/activities/{activity_id}", headers=self._get_headers(),
+                           cookies=self._get_auth())
+
         soup = bs4.BeautifulSoup(res.content, features="html.parser")
         div = soup.find("div", class_="spans5", string="Elevation")
         if div:
@@ -160,21 +163,22 @@ class Strava:
         self._create_activity_cache()
         with open("data/activity_cache.json", "r") as f:
             return json.load(f)
-    
+
     def _add_cached_activity(self, activity_id: int):
         self._create_activity_cache()
         data = self._get_cached_activity()
         data.append(str(activity_id))
         with open("data/activity_cache.json", "w") as f:
             json.dump(data, f)
-    
+
     def get_club_activities(self, club_id: int, activities: list = [], page: int | None = None):
         if page is None:
             page = int(datetime.datetime.now().timestamp())
         params = {
             "cursor": page
         }
-        res = requests.get(f"https://strava.com/clubs/{club_id}/feed", params=params, headers=self._get_headers(), cookies=self._get_auth())
+        res = requests.get(f"https://strava.com/clubs/{club_id}/feed", params=params, headers=self._get_headers(),
+                           cookies=self._get_auth())
         activities_json = res.json()["entries"]
         get_next_page = True
 
@@ -189,29 +193,30 @@ class Strava:
                     "id": "",
                     "type": "Run",
                     "visibility": "everyone",
-                    "elapsedTime": 0, # unused?
+                    "elapsedTime": 0,  # unused?
                     "athlete": {"sex": "M", "athleteId": 0},
                 }
             }
-            #activities_json.insert(0, manual_addition)
+            # activities_json.insert(0, manual_addition)
 
         for activity in activities_json:
             try:
                 is_group = False
-                publish_time = datetime.datetime.fromtimestamp(activity["cursorData"]["updated_at"], tz=datetime.timezone.utc)
+                publish_time = datetime.datetime.fromtimestamp(activity["cursorData"]["updated_at"],
+                                                               tz=datetime.timezone.utc)
                 now = datetime.datetime.now(tz=datetime.timezone.utc)
                 if (now - publish_time).total_seconds() > UPDATE_FREQUENCY_S:
                     get_next_page = False
                     continue
                 if activity["entity"] == "Activity":
                     acts = [activity["activity"]]
-                else: # Assume GroupActivity so we get errors in the log
+                else:  # Assume GroupActivity so we get errors in the log
                     acts = activity["rowData"]["activities"]
                     is_group = True
                 for activity in acts:
                     activity_type = activity["type"]
                     if not "run" in activity_type.lower():
-                        continue # Wrong activity type
+                        continue  # Wrong activity type
                     if is_group:
                         start_time = datetime.datetime.fromisoformat(activity["start_date"])
                     else:
@@ -263,7 +268,9 @@ class Strava:
         return activities
 
     def get_activity_info(self, activity_id: int):
-        res = requests.get(f"https://www.strava.com/activities/{activity_id}/streams?stream_types[]=time&stream_types[]=latlng&stream_types[]=altitude", headers=self._get_headers(), cookies=self._get_auth())
+        res = requests.get(
+            f"https://www.strava.com/activities/{activity_id}/streams?stream_types[]=time&stream_types[]=latlng&stream_types[]=altitude",
+            headers=self._get_headers(), cookies=self._get_auth())
         if not res.ok:
             self._add_cached_activity(activity_id)
             raise StravaError(f"Error when fetching activity: {res.content}. Activity id: {activity_id}")
@@ -280,12 +287,13 @@ def save_data(org: str, data: list, week: int):
         with open(filename, "w") as f:
             json.dump({}, f)
 
-    week = str(week) # json does not support integer keys
+    week = str(week)  # json does not support integer keys
     with open(filename, "r") as f:
         old_data = json.load(f)
     old_data[week] = data
     with open(filename, "w") as f:
         json.dump(old_data, f)
+
 
 def remove_banned_athletes(athletes: list[int], data: list):
     return list(filter(lambda x: x["athlete_id"] not in athletes, data))
@@ -303,18 +311,20 @@ class Athlete(TypedDict):
     org_pic: str
     best_height: int
 
+
 class Activity(TypedDict):
     distance: int
     height: int
     athlete_id: int
     time: str
 
+
 KSAT_CLUB_ID = 471480
 ORBIT_CLUB_ID = 1131791
 
 COMPETITION_START = datetime.datetime(2026, 5, 4, 0, 0, 0)
 COMPETITION_END = datetime.datetime(2026, 6, 1, 0, 0, 0)
-WEEK_LENGTH_SEC = 24*7*3600
+WEEK_LENGTH_SEC = 24 * 7 * 3600
 MAX_MARATHON_WINNERS = 10
 MAX_CUP_WINNERS = 40
 MAX_HEIGHT_LIST_LENGTH = 50
@@ -322,8 +332,8 @@ MAX_DISTANCE_LIST_LENGTH = MAX_HEIGHT_LIST_LENGTH
 MAX_RECENT_ACTIVITY_LIST_LENGTH = 10
 MAX_LONGEST_ACTIVITY_LIST_LENGTH = 10
 MAX_HIGHEST_ACTIVITY_LIST_LENGTH = 10
-MIN_DISTANCE_MARATHON = 100_000 # 100km
-MIN_DISTANCE_CUP = 15_000 # 15km
+MIN_DISTANCE_MARATHON = 100_000  # 100km
+MIN_DISTANCE_CUP = 15_000  # 15km
 
 MAX_SINGLE_HEIGHT_LIST_LENGTH = 10
 MAX_FASTEST_3K_LIST_LENGTH = 10
@@ -332,9 +342,11 @@ MAX_FASTEST_10K_LIST_LENGTH = 10
 week_num = int((read_time - COMPETITION_START).total_seconds() // WEEK_LENGTH_SEC)
 strava = Strava(token)
 
+
 def add_org(data: list, org: str):
     for x in data:
         x["org"] = org
+
 
 def update_data(banned_athletes: list[int], club_id: int, week_offset: int, org: str):
     data = strava.get_leaderboard(club_id, week_offset)
@@ -354,9 +366,9 @@ orbit_banned = [
     92922838,  # Sumeyo Sharif
     117191735,  # Tim Matras
     8804086,  # Ulrik Falk-Petersen
-    120238774, # Miriam Simers Mehus
-    106271302, # Patric Andre Berthelsen
-    136086572, # Mats Kvanvik
+    120238774,  # Miriam Simers Mehus
+    106271302,  # Patric Andre Berthelsen
+    136086572,  # Mats Kvanvik
 ]
 ksat_banned = [
     47158881,  # Freider Engstrøm Fløan
@@ -367,8 +379,8 @@ ksat_banned = [
     1270026,  # Roy Sorensen
     34235219,  # Carl H Jonsson
     23605581,  # Rasmus Nordahl
-    25970800, # Truls Pedersen
-    7585408, # Ola Ørjavik
+    25970800,  # Truls Pedersen
+    7585408,  # Ola Ørjavik
 ]
 org_pictures = {
     "ksat": "ksat.png",
@@ -386,10 +398,12 @@ def iterate_field(data, field: str):
     for x in data:
         yield x[field]
 
+
 def get_stats(data: list):
     total_height = sum(iterate_field(data, "elev_gain"))
     total_distance = sum(iterate_field(data, "distance"))
     return (total_height, total_distance)
+
 
 def round_list(totals: list[Athlete]):
     totals = copy.deepcopy(totals)
@@ -399,6 +413,7 @@ def round_list(totals: list[Athlete]):
         athlete["height"] = int(athlete["height"])
     return totals
 
+
 def finish_latest_activity(activities: list[Activity], athletes: dict[int, Athlete]):
     activities = copy.deepcopy(activities)
     for activity in activities:
@@ -407,6 +422,7 @@ def finish_latest_activity(activities: list[Activity], athletes: dict[int, Athle
         activity["athlete"] = athletes[activity["athlete_id"]]
         activity["time"] = datetime.datetime.fromisoformat(activity["time"]).strftime("%d %B %H:%M")
     return activities
+
 
 def process_athlete(x, totals):
     athlete_id = x["athlete_id"]
@@ -427,11 +443,12 @@ def process_athlete(x, totals):
     athlete["distance"] += x["distance"]
     athlete["height"] += x["elev_gain"]
 
-    new_bd = x["best_activities_distance"] # bd = best distance
+    new_bd = x["best_activities_distance"]  # bd = best distance
     old_bd = athlete["best_distance"]
     if new_bd > old_bd:
         athlete["best_distance"] = new_bd
         athlete["best_distance_activity_id"] = x["best_activities_distance_activity_id"]
+
 
 def get_athlete_totals(totals: dict[int, Athlete], data: list):
     for x in data:
@@ -441,16 +458,21 @@ def get_athlete_totals(totals: dict[int, Athlete], data: list):
             err = f"Could not process athlete: {x}. Error: {e!s}"
             log_err(err)
             warnings.warn(err)
+
+
 def sort_by(totals: list[Athlete], field: str, reverse=False):
     longest_runs = sorted(totals, key=lambda x: x[field], reverse=not reverse)
     return longest_runs
 
-def create_week_string(week: int, distance: float, height: float, improvement_distance: float, improvement_height: float):
+
+def create_week_string(week: int, distance: float, height: float, improvement_distance: float,
+                       improvement_height: float):
     percent_distance = round(100 * (improvement_distance - 1), 1)
     percent_height = round(100 * (improvement_height - 1), 1)
     height = int(height)
     distance = round(distance / 1000, 1)
     return f"Week {week}: {distance}km ({percent_distance:+}%), {height}m ({percent_height:+}%)"
+
 
 def get_stats_total(totals: list[Athlete], org: str):
     height = 0
@@ -461,6 +483,7 @@ def get_stats_total(totals: list[Athlete], org: str):
         height += x["height"]
         distance += x["distance"]
     return height, distance
+
 
 def calculate_new_activities(totals: dict[int, Athlete], old_totals: dict[int, Athlete]) -> list[Activity]:
     activities: list[Activity] = []
@@ -483,6 +506,7 @@ def calculate_new_activities(totals: dict[int, Athlete], old_totals: dict[int, A
             })
     return activities
 
+
 def swap_totals(totals: dict[int, Athlete]):
     totals_file = "data/totals.json"
     if not os.path.exists(totals_file):
@@ -499,15 +523,17 @@ def swap_totals(totals: dict[int, Athlete]):
         json.dump(totals, f)
     return old_totals2
 
+
 def sort_date(activities: list[Activity]):
     for activity in activities:
         activity["time"] = datetime.datetime.fromisoformat(activity["time"])
-    
+
     activities = sorted(activities, key=lambda x: x["time"], reverse=True)
 
     for activity in activities:
         activity["time"] = activity["time"].isoformat()
     return activities
+
 
 def to_hms(time: float) -> tuple[int, int, float]:
     seconds = time % 60
@@ -515,6 +541,7 @@ def to_hms(time: float) -> tuple[int, int, float]:
     hours = tmp // 60
     minutes = tmp % 60
     return int(hours), int(minutes), seconds
+
 
 def round_leaderboard_list(athletes):
     athletes = copy.deepcopy(athletes)
@@ -540,10 +567,12 @@ with open("data/ksat.json") as f:
     data_ksat = json.load(f)
 
 totals = {}
-weeks = range(0, week_num+1)
+weeks = range(0, week_num + 1)
 for week in weeks:
-    get_athlete_totals(totals, data_orbit[str(week)])
-    get_athlete_totals(totals, data_ksat[str(week)])
+    if str(week) in data_orbit:
+        get_athlete_totals(totals, data_orbit[str(week)])
+    if str(week) in data_ksat:
+        get_athlete_totals(totals, data_ksat[str(week)])
 
 # Calculate fastest 3k, 10k, most elevation in single activity
 if not os.path.exists("data/leaderboard_single_activity.json"):
@@ -560,7 +589,7 @@ for activity in latest_strava_activities:
     athlete_id = int(activity.athlete_id)
     if athlete_id not in totals:
         log_err(f"Athlete not found in totals: {athlete_id}")
-        continue # Likely not in either ksat/orbit club
+        continue  # Likely not in either ksat/orbit club
     if str(athlete_id) not in leaderboard:
         athlete = totals[athlete_id]
         leaderboard[str(athlete_id)] = {
@@ -575,7 +604,8 @@ for activity in latest_strava_activities:
             "fastest_3k_activity_id": None,
             "fastest_10k": 100000,
             "fastest_10_activity_id": None,
-            "time_elevation_gain": activity.start_time.strftime("%d %B %H:%M"),#datetime.datetime.now().strftime("%d %B %H:%M"),
+            "time_elevation_gain": activity.start_time.strftime("%d %B %H:%M"),
+            # datetime.datetime.now().strftime("%d %B %H:%M"),
             "time_fastest_3k": activity.start_time.strftime("%d %B %H:%M"),
             "time_fastest_10k": activity.start_time.strftime("%d %B %H:%M"),
             "gender": activity.gender,
@@ -589,14 +619,14 @@ for activity in latest_strava_activities:
         athlete["most_elevation_gain"] = elevation_gain
         athlete["most_elevation_gain_activity_id"] = activity.id
         athlete["time_elevation_gain"] = activity.start_time.strftime("%d %B %H:%M")
-    
+
     # Fastest 3k
     fastest_3k = activity.calculate_fastest_nk(3)
     if fastest_3k is not None and fastest_3k < athlete["fastest_3k"]:
         athlete["fastest_3k"] = fastest_3k
         athlete["fastest_3k_activity_id"] = activity.id
         athlete["time_fastest_3k"] = activity.start_time.strftime("%d %B %H:%M")
-    
+
     fastest_10k = activity.calculate_fastest_nk(10)
     if fastest_10k is not None and fastest_10k < athlete["fastest_10k"]:
         athlete["fastest_10k"] = fastest_10k
@@ -606,7 +636,6 @@ for activity in latest_strava_activities:
 # Save leaderboard
 with open("data/leaderboard_single_activity.json", "w") as f:
     json.dump(leaderboard, f, indent=2)
-
 
 # Store activities
 old_totals = swap_totals(totals)
@@ -627,56 +656,94 @@ with open(activities_file, "w") as f:
 
 statistics["longest_distance"] = round_list(sort_by(totals.values(), "distance")[:MAX_DISTANCE_LIST_LENGTH])
 statistics["most_height"] = round_list(sort_by(totals.values(), "height")[:MAX_HEIGHT_LIST_LENGTH])
-statistics["longest_single_distance"] = round_list(sort_by(totals.values(), "best_distance")[:MAX_LONGEST_ACTIVITY_LIST_LENGTH])
+statistics["longest_single_distance"] = round_list(
+    sort_by(totals.values(), "best_distance")[:MAX_LONGEST_ACTIVITY_LIST_LENGTH])
 statistics["latest_activity"] = finish_latest_activity(sort_date(old_activities)[:10], totals)
-statistics["most_single_height"] = round_leaderboard_list(sort_by(leaderboard.values(), "most_elevation_gain")[:MAX_SINGLE_HEIGHT_LIST_LENGTH])
+statistics["most_single_height"] = round_leaderboard_list(
+    sort_by(leaderboard.values(), "most_elevation_gain")[:MAX_SINGLE_HEIGHT_LIST_LENGTH])
 
 leaderboard1 = copy.deepcopy(leaderboard)
-statistics["fastest_3k"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000, sort_by(leaderboard1.values(), "fastest_3k", reverse=True)))[:MAX_FASTEST_3K_LIST_LENGTH])
-statistics["fastest_10k"] = round_leaderboard_list(list(filter(lambda x: x["fastest_10k"] != 100000, sort_by(leaderboard1.values(), "fastest_10k", reverse=True)))[:MAX_FASTEST_10K_LIST_LENGTH])
+statistics["fastest_3k"] = round_leaderboard_list(
+    list(filter(lambda x: x["fastest_3k"] != 100000, sort_by(leaderboard1.values(), "fastest_3k", reverse=True)))[
+    :MAX_FASTEST_3K_LIST_LENGTH])
+statistics["fastest_10k"] = round_leaderboard_list(
+    list(filter(lambda x: x["fastest_10k"] != 100000, sort_by(leaderboard1.values(), "fastest_10k", reverse=True)))[
+    :MAX_FASTEST_10K_LIST_LENGTH])
 
 leaderboard2 = copy.deepcopy(leaderboard)
-statistics["fastest_3k_female"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000 and x["gender"] == "F", sort_by(leaderboard2.values(), "fastest_3k", reverse=True)))[:MAX_FASTEST_3K_LIST_LENGTH])
-statistics["fastest_10k_female"] = round_leaderboard_list(list(filter(lambda x: x["fastest_10k"] != 100000 and x["gender"] == "F", sort_by(leaderboard2.values(), "fastest_10k", reverse=True)))[:MAX_FASTEST_10K_LIST_LENGTH])
+statistics["fastest_3k_female"] = round_leaderboard_list(list(
+    filter(lambda x: x["fastest_3k"] != 100000 and x["gender"] == "F",
+           sort_by(leaderboard2.values(), "fastest_3k", reverse=True)))[:MAX_FASTEST_3K_LIST_LENGTH])
+statistics["fastest_10k_female"] = round_leaderboard_list(list(
+    filter(lambda x: x["fastest_10k"] != 100000 and x["gender"] == "F",
+           sort_by(leaderboard2.values(), "fastest_10k", reverse=True)))[:MAX_FASTEST_10K_LIST_LENGTH])
 
 leaderboard3 = copy.deepcopy(leaderboard)
-statistics["fastest_3k_male"] = round_leaderboard_list(list(filter(lambda x: x["fastest_3k"] != 100000 and x["gender"] == "M", sort_by(leaderboard3.values(), "fastest_3k", reverse=True)))[:MAX_FASTEST_3K_LIST_LENGTH])
-statistics["fastest_10k_male"] = round_leaderboard_list(list(filter(lambda x: x["fastest_10k"] != 100000 and x["gender"] == "M", sort_by(leaderboard3.values(), "fastest_10k", reverse=True)))[:MAX_FASTEST_10K_LIST_LENGTH])
+statistics["fastest_3k_male"] = round_leaderboard_list(list(
+    filter(lambda x: x["fastest_3k"] != 100000 and x["gender"] == "M",
+           sort_by(leaderboard3.values(), "fastest_3k", reverse=True)))[:MAX_FASTEST_3K_LIST_LENGTH])
+statistics["fastest_10k_male"] = round_leaderboard_list(list(
+    filter(lambda x: x["fastest_10k"] != 100000 and x["gender"] == "M",
+           sort_by(leaderboard3.values(), "fastest_10k", reverse=True)))[:MAX_FASTEST_10K_LIST_LENGTH])
 
-for week0, week1 in zip(range(-1, week_num), range(0, week_num+1)):
+
+def _week_stats(data, week_key):
+    if week_key in data:
+        return get_stats(data[week_key])
+    return (0, 0)
+
+
+for week0, week1 in zip(range(-1, week_num), range(0, week_num + 1)):
+    w1_key = str(week1)
+    w0_key = str(week0)
+
+    # KSAT
     ksat[week1] = {"distance": {}, "height": {}}
-    height0, distance0 = get_stats(data_ksat[str(week0)])
-    height1, distance1 = get_stats(data_ksat[str(week1)])
-    ksat[week1]["distance"]["improvement"] = distance1 / distance0
-    ksat[week1]["height"]["improvement"] = height1 / height0
-    ksat[week1]["distance"]["total"] = round(distance1/1000, 1)
+    if w1_key not in data_ksat:
+        # No data saved for this week yet, skip it
+        continue
+    height1, distance1 = _week_stats(data_ksat, w1_key)
+    height0, distance0 = _week_stats(data_ksat, w0_key)
+    # avoid division by zero when the previous week is missing or empty
+    safe_distance0 = distance0 if distance0 else 1
+    safe_height0 = height0 if height0 else 1
+    ksat[week1]["distance"]["improvement"] = distance1 / safe_distance0
+    ksat[week1]["height"]["improvement"] = height1 / safe_height0
+    ksat[week1]["distance"]["total"] = round(distance1 / 1000, 1)
     ksat[week1]["height"]["total"] = int(height1)
-    ksat[week1]["week_string"] = create_week_string(week1, distance1, height1, distance1/distance0, height1/height0)
-    ksat["distance_week"] = round(distance1/1000, 1)
+    ksat[week1]["week_string"] = create_week_string(week1, distance1, height1, distance1 / safe_distance0,
+                                                    height1 / safe_height0)
+    ksat["distance_week"] = round(distance1 / 1000, 1)
     ksat["height_week"] = int(height1)
 
+    # ORBIT
     orbit[week1] = {"distance": {}, "height": {}}
-    height0, distance0 = get_stats(data_orbit[str(week0)])
-    height1, distance1 = get_stats(data_orbit[str(week1)])
-    orbit[week1]["distance"]["improvement"] = distance1 / distance0
-    orbit[week1]["height"]["improvement"] = height1 / height0
-    orbit[week1]["distance"]["total"] = round(distance1/1000, 1)
+    if w1_key not in data_orbit:
+        continue
+    height1, distance1 = _week_stats(data_orbit, w1_key)
+    height0, distance0 = _week_stats(data_orbit, w0_key)
+    safe_distance0 = distance0 if distance0 else 1
+    safe_height0 = height0 if height0 else 1
+    orbit[week1]["distance"]["improvement"] = distance1 / safe_distance0
+    orbit[week1]["height"]["improvement"] = height1 / safe_height0
+    orbit[week1]["distance"]["total"] = round(distance1 / 1000, 1)
     orbit[week1]["height"]["total"] = int(height1)
-    orbit[week1]["week_string"] = create_week_string(week1, distance1, height1, distance1/distance0, height1/height0)
-    orbit["distance_week"] = round(distance1/1000, 1)
+    orbit[week1]["week_string"] = create_week_string(week1, distance1, height1, distance1 / safe_distance0,
+                                                     height1 / safe_height0)
+    orbit["distance_week"] = round(distance1 / 1000, 1)
     orbit["height_week"] = int(height1)
 
 height, orbit_distance = get_stats_total(totals.values(), "orbit")
-orbit["distance"] = round(orbit_distance/1000, 1)
+orbit["distance"] = round(orbit_distance / 1000, 1)
 orbit["height"] = int(height)
 height, ksat_distance = get_stats_total(totals.values(), "ksat")
-ksat["distance"] = round(ksat_distance/1000, 1)
+ksat["distance"] = round(ksat_distance / 1000, 1)
 ksat["height"] = int(height)
 
 # Calculate progess bar
 longest = ksat_distance if ksat_distance > orbit_distance else orbit_distance
 if longest == 0:
-    longest = 1 # preved zero div
+    longest = 1  # preved zero div
 
 leading_org = "ksat" if ksat_distance > orbit_distance else "orbit"
 
@@ -684,7 +751,9 @@ comp_progress = (read_time - COMPETITION_START).total_seconds() / (COMPETITION_E
 ksat["progress"] = (ksat_distance / longest) * comp_progress * 100
 orbit["progress"] = (orbit_distance / longest) * comp_progress * 100
 
-statistics["weeks"] = [str(x) for x in range(0, week_num + 1)]
+# Only include weeks we actually have data for in the display list
+statistics["weeks"] = [str(x) for x in range(0, week_num + 1)
+                       if str(x) in data_ksat or str(x) in data_orbit]
 
 with open("data/stats.json", "w") as f:
     json.dump(statistics, f, indent=2)
