@@ -28,7 +28,7 @@
                 </div>
                 <div>
                     <h1 style="text-align: center; margin-bottom: 50px;">VS</h1>
-                    <h3 style="text-align: center;">Time left:</h3>
+                    <h3 id="countdown-label" style="text-align: center;">Time left:</h3>
                     <ul>
                         <div>
                             <li id="days">0</li>
@@ -346,22 +346,35 @@
     </footer>
     <script type="text/javascript">
         const updateTimer = () => {
-            let now = new Date();
-            let end = new Date(2026, 5, 1, 0, 0, 0);
-            let time_left = (end - now) / 1000;
-            days = Math.floor(time_left/(24*3600))
-            hours = Math.floor((time_left%(24*3600))/3600)
-            minutes = Math.floor((time_left%3600)/60)
-            seconds = Math.floor(time_left%60)
-            document.getElementById("days").innerHTML = days
-            document.getElementById("hours").innerHTML = hours
-            document.getElementById("minutes").innerHTML = minutes
-            document.getElementById("seconds").innerHTML = seconds
+    const now = new Date();
+    const startDate = new Date(2026, 4, 4, 0, 0, 0); // 4. mai 2026
+    const endDate   = new Date(2026, 5, 1, 0, 0, 0); // 1. juni 2026
+
+    let target, label;
+    if (now < startDate) {
+        target = startDate;
+        label = "Starts in:";
+    } else if (now < endDate) {
+        target = endDate;
+        label = "Time left:";
+         }   else  {
+            document.getElementById("countdown-label").innerHTML = "Finished!";
+            ["days", "hours", "minutes", "seconds"].forEach(id =>
+                document.getElementById(id).innerHTML = 0);
+            return;
         }
+
+            document.getElementById("countdown-label").innerHTML = label;
+
+            const timeLeft = (target - now) / 1000;
+            document.getElementById("days").innerHTML    = Math.floor(timeLeft / 86400);
+            document.getElementById("hours").innerHTML   = Math.floor((timeLeft % 86400) / 3600);
+            document.getElementById("minutes").innerHTML = Math.floor((timeLeft % 3600) / 60);
+            document.getElementById("seconds").innerHTML = Math.floor(timeLeft % 60);
+        };
 
         updateTimer();
         setInterval(updateTimer, 1000);
-
         const updateTable = (tableName) => {
             table = document.getElementById(tableName + "_table");
             input = document.getElementById(tableName + "_sort");
